@@ -322,18 +322,23 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     fluidRow(
         column(width = 4,
                   #Choose your favourite photoperiod
-                 conditionalPanel(condition = "input.navigation_bar == 'clusters' || input.navigation_bar == 'genes' ",
+                 conditionalPanel(condition = "input.navigation_bar == 'clusters' || input.navigation_bar == 'individual' ",
                                  selectInput(inputId = "season", label="Choose your favourite photoperiod", 
                                             
                                             choices=c("Long days (Summer)" = "LD", 
                                                       "Short days (Winter)" = "SD"
                                             ))),
+               #Transcriptome or proteome?
+               conditionalPanel(condition = "input.navigation_bar == 'individual' || input.navigation_bar == 'clusters' ",    
+                                #Choose the kind of analysis that you want us to execute 
+                                radioButtons(inputId = "analysis",
+                                             label="Are you interested in proteomics or transcriptomics?",
+                                             choices=c("Transcriptomics rules!" = "rna",
+                                                       "Proteomics nerd" = "prot",
+                                                       "Multi-omics integration for the win!" = "integration"
+                                             ))),
+               #Choose your favourite time of the day
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",
-                                #Choose the target time of the day
-                                # textInput(inputId= "zt",
-                                #           label= "Choose your favourite time of the day",
-                                #           value = "", 
-                                #          placeholder = "os")),
                                 selectInput(inputId = "zt", label="Choose your favourite time of the day", 
                                             
                                             choices=c("Sunrise(ZT0)" = "zt0", 
@@ -344,7 +349,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                       "ZT20" = "zt20"
                                                        ))),
              
-              
+              #choose the analysis to execute
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",    
                                 #Choose the kind of analysis that you want us to execute 
                                 radioButtons(inputId = "analysis",
@@ -370,14 +375,15 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                ),
                
                
-               #Choose genomic features
-               conditionalPanel(condition = "input.navigation_bar == 'chip'",
-                                checkboxGroupInput(inputId = "selected_genomic_features",selected = c("Promoter","5' UTR","Exon","Intron","3' UTR"), 
-                                                   label= "A gene will be associated to an input genomic locus
-                                   when it overlaps one of the following gene features:",
-                                                   choices = c("Promoter","5' UTR","Exon","Intron","3' UTR")))
+               #Choose your favourite gene
+               conditionalPanel(condition = "input.navigation_bar == 'individual'",
+                                textInput(inputId= "gene",
+                                          label= "Choose your favourite gene",
+                                          value = "",
+                                         placeholder = "ostta07g03440")),
                
         ),
+        
         
         column( width = 8,
                 #UI for functional enrichment over a gene set obtained for instance from an RNAseq data analysis
