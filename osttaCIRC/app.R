@@ -175,10 +175,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                          label="",
                          choices=c(
                              "Home" = "home",
-                             "Gene Set Functional Analysis" = "genes",
-                             "Genomic Loci Functional Analysis" = "chip",
-                             "MARACAS, MicroAlgae RnA-seq and Chip-seq AnalysiS" = "maracas",
-                             "Tutorials" = "tutorials",
+                             "Cluster Functional Analysis" = "clusters",
+                             "Individual Gene Exploration" = "individual"
+                            "Tutorials" = "tutorials",
                              "GitHub repository" = "github",
                              "Citation and Contact" = "citation"
                          ))),
@@ -204,7 +203,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                              tags$div(align ="center",img(src='phylogeny.png', align = "center", width=600))
             ),
             
-            conditionalPanel(condition = "input.navigation_bar == 'genes'",
+            conditionalPanel(condition = "input.navigation_bar == 'clusters'",
                              tags$div(align="justify", tags$b("AlgaeFUN"), "allows researchers to perform", tags$b("functional annotation"), 
                                       "over gene sets.", tags$b("Gene Ontology (GO) enrichment"), "analysis as well as", tags$b("KEGG (Kyoto Encyclopedia
                        of Genes and Genomes) pathway enrichment"), "analysis are supported. The gene set of interest can be obtained, for example,
@@ -223,7 +222,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                       )
                              )),
             
-            conditionalPanel(condition = "input.navigation_bar == 'chip'",
+            conditionalPanel(condition = "input.navigation_bar == 'individual'",
                              tags$div(align="justify", tags$b("AlgaeFUN"), "allows researchers to perform", tags$b("annotation analysis 
                                 of genomic loci or regions."), "These are typically generated from", tags$b("ChIP-seq"), "studies 
                                 of the genome-wide distribution of", tags$b("epigenetic marks or transcription factor binding sites."),
@@ -249,41 +248,8 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                           results will be shown in the different tabs below.")
                                       )
                              )),
-            conditionalPanel(condition = "input.navigation_bar == 'maracas'",
-                             tags$div(align = "justify", tags$b("MARACAS (MicroAlgae RnA-seq and Chip-seq AnalysiS) ")," 
-                       is an automatic computational pipeline specifically designed for the analysis of ",  
-                                      tags$b("microalgae RNA-seq and ChIP-seq data"),". MARACAS starts processing raw fastq files 
-                       and generates lists of differentially expressed genes for RNA-seq data and lists of genomic 
-                       loci in bed format for ChIP-seq data. BigWig files containing normalized mapping signal are 
-                       also generated. The analysis are performed according to user specified parameters. Reports 
-                       in html and pdf format are produced for easy exploration of the results.", tags$br(),
-                                      "Differential expressed gene lists and genomic loci lists can be further analyzed using this 
-                       online tool AlgaeFUN for functional analysis.", tags$br(),
-                                      tags$b("MARACAS"), " supports a wide range of microalge including:",tags$br(),
-                                      tags$ul(
-                                          tags$li("Ostreococcus tauri"),
-                                          tags$li("Micromonas pusilla CCMP1545"),
-                                          tags$li("Bathycoccus prasinos"),
-                                          tags$li("Coccomyxa subellipsoidea"),
-                                          tags$li("Chlamydomonas reinhardtii"),
-                                          tags$li("Volvox Carteri"),
-                                          tags$li("Dunaliella salina"),
-                                          tags$li("Haematococcus lacustris"),
-                                          tags$li("Chlomochloris zofingiensis"),
-                                          tags$li("Klebsormidium nitens"),
-                                          tags$li("Mesotaenium endlicherianum"),
-                                          tags$li("Spirogloea muscicola"),
-                                          tags$li("Phaeodactylum tricornutum"),
-                                          tags$li("Nannochloropsis gaditana"),
-                                      ),
-                                      tags$b("MARACAS"), " can be executed in a sequential mode in a laptop or server and 
-                       in a distributed/parallel mode in a computer cluster.", tags$br()),
-                             tags$div(align="center",
-                                      tags$a(href="https://github.com/fran-romero-campero/MARACAS", target="_blank",
-                                             tags$h4(tags$b("Click here for instructions on how to download, install and execute MARACAS.")))
-                             )
-            ),
             
+
             conditionalPanel(condition = "input.navigation_bar == 'github'",
                              tags$div(align = "justify", tags$b("AlgaeFUN,"), "is entirely developed using 
         the R package", tags$b( tags$a(href="https://shiny.rstudio.com/", "shiny.")), "The 
@@ -355,28 +321,31 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     #Interface where the user can choose his/her preferencies, separated by columns
     fluidRow(
         column(width = 4,
-               
-               conditionalPanel(condition = "input.navigation_bar == 'genes' || input.navigation_bar == 'chip'",
-                                #Choose the target microalgae
-                                selectInput(inputId = "microalgae", label="Choose your favourite microalgae", 
+                  #Choose your favourite photoperiod
+                 conditionalPanel(condition = "input.navigation_bar == 'clusters' || input.navigation_bar == 'genes' ",
+                                 selectInput(inputId = "season", label="Choose your favourite photoperiod", 
                                             
-                                            choices=c("Ostreococcus tauri" = "otauri", 
-                                                      "Micromonas pusilla CCMP1545" = "mpusilla",
-                                                      "Bathycoccus prasinos" = "bprasinos",
-                                                      "Coccomyxa subellipsoidea" = "csubellipsoidea",
-                                                      "Chlamydomonas reinhardtii" = "creinhardtii", 
-                                                      "Volvox carteri" = "vcarteri",
-                                                      "Dunaliella salina" = "dsalina",
-                                                      "Haematococcus lacustris" = "hlacustris",
-                                                      "Chromochloris zofingiensis" = "czofingiensis",
-                                                      "Klebsormidium nitens" = "knitens",
-                                                      "Mesotaenium endlicherianum" = "mendlicherianum",
-                                                      "Spirogloea muscicola" = "smuscicola",
-                                                      "Phaeodactylum tricornutum" = "ptricornutum",
-                                                      "Nannochloropsis gaditana" = "ngaditana"
+                                            choices=c("Long days (Summer)" = "LD", 
+                                                      "Short days (Winter)" = "SD"
                                             ))),
-               
-               conditionalPanel(condition = "input.navigation_bar == 'genes'",    
+               conditionalPanel(condition = "input.navigation_bar == 'clusters'",
+                                #Choose the target time of the day
+                                # textInput(inputId= "zt",
+                                #           label= "Choose your favourite time of the day",
+                                #           value = "", 
+                                #          placeholder = "os")),
+                                selectInput(inputId = "zt", label="Choose your favourite time of the day", 
+                                            
+                                            choices=c("Sunrise(ZT0)" = "zt0", 
+                                                      "ZT4" = "zt4",
+                                                      "ZT8" = "zt8",
+                                                      "ZT12" = "zt12",
+                                                      "ZT16" = "zt16", 
+                                                      "ZT20" = "zt20"
+                                                       ))),
+             
+              
+               conditionalPanel(condition = "input.navigation_bar == 'clusters'",    
                                 #Choose the kind of analysis that you want us to execute 
                                 radioButtons(inputId = "analysis",
                                              label="Choose your desirable analysis",
@@ -386,27 +355,20 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                              ))),
                
                conditionalPanel(condition= "(input.analysis == 'go' || input.analysis == 'both') &&
-                                   input.navigation_bar == 'genes'",
+                                   input.navigation_bar == 'clusters'",
                                 radioButtons(inputId = "ontology",
                                              label="Choose gene ontology:",
                                              choices = c("Biological process" = "BP",
                                                          "Cellular Component" = "CC",
                                                          "Mollecular Function" = "MF"))),
                #Choose a p-value
-               conditionalPanel(condition = "input.navigation_bar == 'genes'",
+               conditionalPanel(condition = "input.navigation_bar == 'clusters'",
                                 
                                 numericInput(inputId = "pvalue", 
                                              label= "Which will be your chosen p-value?", 
                                              value= 0.05)
                ),
                
-               
-               #Choose a promoter length
-               conditionalPanel(condition = "input.navigation_bar == 'chip'",
-                                sliderInput(inputId = "promoter_length", 
-                                            label= "Choose the distance in base pairs around the 
-                                    Transcriptional Start Site defining gene promoters", 
-                                            min=100, max=2000,value=1000,step=100)),
                
                #Choose genomic features
                conditionalPanel(condition = "input.navigation_bar == 'chip'",
@@ -422,7 +384,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                 conditionalPanel(condition = "input.navigation_bar == 'genes'",
                                  
                                  #This panel will only appear if the user chooses to use our background lists. 
-                                 textAreaInput(inputId = "genes", label= "Insert a set of genes", width="200%", 
+                                 textAreaInput(inputId = "clusters", label= "Insert a set of genes", width="200%", 
                                                height = "200px",placeholder = "Insert set of genes",
                                                value= ""
                                  ),
@@ -633,7 +595,7 @@ server <- shinyServer(function(input, output, session) {
     
     ## Clear content of gene set text area and previous results
     observeEvent(input$clear_gene_set, {
-        updateTextAreaInput(session=session, inputId = "genes",value = "")
+        updateTextAreaInput(session=session, inputId = "clusters",value = "")
         
         shinyjs::hideElement(id = 'loading.enrichment.go')
         shinyjs::hideElement(id = 'ready.enrichment.go')
@@ -696,7 +658,7 @@ server <- shinyServer(function(input, output, session) {
     observeEvent(input$example_genes, {
         example.file <- paste(c("example_files/example_",input$microalgae,".txt"),collapse="")
         example.genes <- read.table(file = example.file,header = F,as.is = T,comment.char="",quote="\"")[[1]]
-        updateTextAreaInput(session=session, inputId = "genes",value = paste(example.genes,collapse="\n"))
+        updateTextAreaInput(session=session, inputId = "clusters",value = paste(example.genes,collapse="\n"))
     })
     
     ## Add an example of genomic regions to text area
