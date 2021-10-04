@@ -295,7 +295,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     
     #Interface where the user can choose his/her preferencies, separated by columns
     fluidRow(
-        column(width = 4,)
+        column(width = 4),
         column(width = 4,
                   #Choose your favourite photoperiod
                  conditionalPanel(condition = "input.navigation_bar == 'clusters' || input.navigation_bar == 'individual' ",
@@ -304,15 +304,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                             choices=c("Long days (Summer)" = "LD", 
                                                       "Short days (Winter)" = "SD"
                                             ))),
-               #Transcriptome or proteome?
-               conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
-                                #Choose the kind of analysis that you want us to execute 
-                                radioButtons(inputId = "omics",
-                                             label="Are you interested in proteomics or transcriptomics?",
-                                             choices=c("Transcriptomics rules!" = "rna",
-                                                       "Proteomics nerd" = "prot",
-                                                       "Multi-omics integration for the win!" = "integration"
-                                             ))),
+               
                #Choose your favourite time of the day
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",
                                 selectInput(inputId = "zt", label="Choose your favourite time of the day", 
@@ -329,12 +321,18 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                 textInput(inputId= "gene",
                                           label= "Choose your favourite gene",
                                           value = "",
-                                          placeholder = "ostta07g03440")),
-               conditionalPanel(condition = "input.navigation_bar == 'individual'",
-                                actionButton(inputId = "circ.button",label = "Have fun!", icon("send") )                       
-               )
+                                          placeholder = "ostta07g03440"))
                ),
         column(width = 4,
+               #Transcriptome or proteome?
+               conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
+                                #Choose the kind of analysis that you want us to execute 
+                                radioButtons(inputId = "omics",
+                                             label="Are you interested in proteomics or transcriptomics?",
+                                             choices=c("Transcriptomics rules!" = "rna",
+                                                       "Proteomics nerd" = "prot",
+                                                       "Multi-omics integration for the win!" = "integration"
+                                             ))),
               #choose the analysis to execute
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",    
                                 #Choose the kind of analysis that you want us to execute 
@@ -361,7 +359,10 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                 #Button for functional enrichment over the chosen cluster of genes.
                 conditionalPanel(condition = "input.navigation_bar == 'clusters'",
                                  actionButton(inputId = "go.button",label = "Have fun!", icon("send") )                       
-                                )
+                                ),
+              conditionalPanel(condition = "input.navigation_bar == 'individual'",
+                               actionButton(inputId = "circ.button",label = "Have fun!", icon("send") )                       
+              )
                )
               ),
               
