@@ -356,20 +356,17 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                           label= "Choose your favourite gene",
                                           value = "",
                                          placeholder = "ostta07g03440")),
+              
+              #Button for functional enrichment over the chosen cluster of genes.
+              conditionalPanel(condition = "input.navigation_bar == 'clusters'",
+                               actionButton(inputId = "go.button",label = "Have fun!", icon("send") )                       
+              ),
+              conditionalPanel(condition = "input.navigation_bar == 'individual'",
+                               actionButton(inputId = "circ.button",label = "Have fun!", icon("send") )                       
+              )
                
         ),
         
-        
-        column( width = 8,
-                #Button for functional enrichment over the chosen cluster of genes.
-                conditionalPanel(condition = "input.navigation_bar == 'clusters'",
-                                 actionButton(inputId = "go.button",label = "Have fun!", icon("send") )                       
-                ),
-                conditionalPanel(condition = "input.navigation_bar == 'individual'",
-                                 actionButton(inputId = "circ.button",label = "Have fun!", icon("send") )                       
-                )
-                
-        )
     ),
     
     tags$br(), tags$br(),
@@ -500,7 +497,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                     dataTableOutput(outputId = "output_statistical_table"),
                                                     uiOutput(outputId = "download_ui_for_statistical_table"),
                                                     tags$br(), tags$br(),
-                                                    br(), br()),
+                                                    br(), br())
                                            ))
              
                                                     
