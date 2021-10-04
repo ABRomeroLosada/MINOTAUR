@@ -19,36 +19,11 @@ library(shiny)
 library(shinythemes)
 library(shinyjs)
 ## Load microalgae annotation packages
-# library(org.Otauri.eg.db) ##install.packages(pkgs = "./packages/annotation_packages/org.Otauri.eg.db/",repos = NULL,type="source")
-# library(org.MpusillaCCMP1545.eg.db)
-# library(org.Bprasinos.eg.db)
-# library(org.Csubellipsoidea.eg.db)
-# library(org.Creinhardtii.eg.db)
-# library(org.Vcarteri.eg.db)
-# library(org.Dsalina.eg.db)
-# library(org.Hlacustris.eg.db)
-# library(org.Czofingiensis.eg.db)
-# library(org.Knitens.eg.db)
-# library(org.Mendlicherianum.eg.db)
-# library(org.Smuscicola.eg.db)
-# library(org.Ptricornutum.eg.db)
-# library(org.Ngaditana.eg.db)
+# library(org.Otauri.eg.db) 
+##install.packages(pkgs = "./packages/annotation_packages/org.Otauri.eg.db/",repos = NULL,type="source")
 
 ## Load microalgae genome annotation packages
 # library(TxDb.Otauri.JGI)
-# library(TxDb.MpusillaCCMP1545.Phytozome)
-# library(TxDb.Bprasinos.Orcae)
-# library(TxDb.Csubellipsoidea.Phytozome)
-# library(TxDb.Creinhardtii.Phytozome)
-# library(TxDb.Vcarteri.Phytozome)
-# library(TxDb.Dsalina.Phytozome)
-# library(TxDb.Hlacustris.NCBI)
-# library(TxDb.Czofingiensis.Phytozome)
-# library(TxDb.Knitens.Phycocosm)
-# library(TxDb.Mendlicherianum.pub)
-# library(TxDb.Smuscicola.pub)
-# library(TxDb.Ptricornutum.Ensembl.Protists)
-# library(TxDb.Ngaditana.JGI)
 
 ## Auxiliary functions
 ## Auxiliary function to compute enrichments
@@ -386,54 +361,14 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
         
         
         column( width = 8,
-                #UI for functional enrichment over a gene set obtained for instance from an RNAseq data analysis
-                conditionalPanel(condition = "input.navigation_bar == 'genes'",
-                                 
-                                 #This panel will only appear if the user chooses to use our background lists. 
-                                 textAreaInput(inputId = "clusters", label= "Insert a set of genes", width="200%", 
-                                               height = "200px",placeholder = "Insert set of genes",
-                                               value= ""
-                                 ),
-                                 actionButton(inputId = "example_genes",label = "Example"),
-                                 actionButton(inputId = "clear_gene_set",label = "Clear"),
-                                 fileInput(inputId = "gene_set_file",label = "Choose File with Gene Set to Upload"),
-                                 
-                                 #The user can either insert his/her own background list or use ours. 
-                                 radioButtons(inputId = "input_mode", width = "100%",
-                                              label = "Would you rather use your own background set?", 
-                                              choices = c("Yes", 
-                                                          "No"),
-                                              selected = "No"),
-                                 #This panel will only appear if the user wants to use his/her own background list. 
-                                 conditionalPanel(condition = "input.input_mode == 'Yes'",
-                                                  textAreaInput(inputId = "background", label= "Background set", width="200%", 
-                                                                height = "100px",placeholder = "Insert background list",
-                                                                value= ""
-                                                  ),
-                                                  
-                                                  actionButton(inputId = "clear_universe_set",label = "Clear"),
-                                                  fileInput(inputId = "gene_universe_file",
-                                                            label = "Choose File with Custom Gene Universe to Upload",
-                                                            width = "100%")
-                                                  
-                                 )),
-                
-                conditionalPanel(condition = "input.navigation_bar == 'chip'",
-                                 #UI for functional annotation of genomic loci obtained for instance from a ChIPseq data analysis 
-                                 textAreaInput(inputId = "genomic_regions", 
-                                               label= "Insert a set of genomic regions", 
-                                               width="200%", height = "200px", 
-                                               placeholder = "Insert set of genomic regions",
-                                               value= ""),
-                                 actionButton(inputId = "example_genomic_regions",label = "Example"),
-                                 actionButton(inputId = "clear_genomic_regions",label = "Clear"),
-                                 fileInput(inputId = "genomic_regions_file",label = "Choose File with the Genomic Regions to Upload",width = "100%"),
-                                 fileInput(inputId = "bw_file",label = "Choose BigWig File to Upload for Profile Representations: (Optional)", width= "100%"),
-                                 actionButton(inputId = "genomic_button",label = "Have fun!", icon("send") )                       
-                ),
-                conditionalPanel(condition = "input.navigation_bar == 'genes'",
+                #Button for functional enrichment over the chosen cluster of genes.
+                conditionalPanel(condition = "input.navigation_bar == 'clusters'",
                                  actionButton(inputId = "go.button",label = "Have fun!", icon("send") )                       
+                ),
+                conditionalPanel(condition = "input.navigation_bar == 'individual'",
+                                 actionButton(inputId = "circ.button",label = "Have fun!", icon("send") )                       
                 )
+                
         )
     ),
     
@@ -443,7 +378,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
               #Main panel containing the results organized in different tabs: GO map, Go terms data table, and 
               #KEGG pathway maps for gene set enrichment analysis
               
-              conditionalPanel(condition = "(input.navigation_bar == 'genes')",
+              conditionalPanel(condition = "(input.navigation_bar == 'clusters')",
                                tabsetPanel(type ="tabs",
                                            tabPanel(tags$b("GO ENRICHMENT"),
                                                     shinyjs::useShinyjs(),
@@ -505,7 +440,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                                          tags$br(),
                                                                          tags$br(),tags$br())
                                                     ) # close tabsetPanel for go result
-                                           ), # close tabPanel for GO ENRICHMENT
+                                           ), # close tabPanel for KEGG ENRICHMENT
                                            tabPanel(tags$b("KEGG PATHWAY ENRICHMENT"),
                                                     shinyjs::useShinyjs(),
                                                     hidden(div(id='loading.enrichment.kegg',h3('Please be patient, computing KEGG pathway enrichment ...'))), 
@@ -551,9 +486,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
               ## Main panel containing the results organized in different tabs for gene 
               ## genomic loci functional annotation
               
-              conditionalPanel(condition = "input.navigation_bar == 'chip'",
-                               hidden(div(id='loading.chip',h3('Please be patient, computing genomic loci analysis ...'))), 
-                               hidden(div(id='ready.chip',h3('Your genomic loci analysis is ready!'))),
+              conditionalPanel(condition = "input.navigation_bar == 'individual'",
+                               hidden(div(id='loading.circ',h3('Please be patient, we are working on it ...'))), 
+                               hidden(div(id='ready.circ',h3('Your genomic loci analysis is ready!'))),
                                tabsetPanel(type = "tabs",
                                            tabPanel(tags$b("Marked Genes Table"),
                                                     tags$br(), 
