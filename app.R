@@ -295,6 +295,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     
     #Interface where the user can choose his/her preferencies, separated by columns
     fluidRow(
+        column(width = 4,)
         column(width = 4,
                   #Choose your favourite photoperiod
                  conditionalPanel(condition = "input.navigation_bar == 'clusters' || input.navigation_bar == 'individual' ",
@@ -323,7 +324,17 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                       "ZT16" = "zt16", 
                                                       "ZT20" = "zt20"
                                                        ))),
-             
+               #Choose your favourite gene
+               conditionalPanel(condition = "input.navigation_bar == 'individual'",
+                                textInput(inputId= "gene",
+                                          label= "Choose your favourite gene",
+                                          value = "",
+                                          placeholder = "ostta07g03440")),
+               conditionalPanel(condition = "input.navigation_bar == 'individual'",
+                                actionButton(inputId = "circ.button",label = "Have fun!", icon("send") )                       
+               )
+               ),
+        column(width = 4,
               #choose the analysis to execute
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",    
                                 #Choose the kind of analysis that you want us to execute 
@@ -346,29 +357,15 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                 
                                 numericInput(inputId = "pvalue", 
                                              label= "Which will be your chosen p-value?", 
-                                             value= 0.05)
-               ),
-               
-               
-               #Choose your favourite gene
-               conditionalPanel(condition = "input.navigation_bar == 'individual'",
-                                textInput(inputId= "gene",
-                                          label= "Choose your favourite gene",
-                                          value = "",
-                                         placeholder = "ostta07g03440")),
-              
-              #Button for functional enrichment over the chosen cluster of genes.
-              conditionalPanel(condition = "input.navigation_bar == 'clusters'",
-                               actionButton(inputId = "go.button",label = "Have fun!", icon("send") )                       
+                                             value= 0.05)),
+                #Button for functional enrichment over the chosen cluster of genes.
+                conditionalPanel(condition = "input.navigation_bar == 'clusters'",
+                                 actionButton(inputId = "go.button",label = "Have fun!", icon("send") )                       
+                                )
+               )
               ),
-              conditionalPanel(condition = "input.navigation_bar == 'individual'",
-                               actionButton(inputId = "circ.button",label = "Have fun!", icon("send") )                       
-              )
-               
-        ),
+              
         
-    ),
-    
     tags$br(), tags$br(),
     mainPanel(width = 13,
               
