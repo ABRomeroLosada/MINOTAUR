@@ -295,7 +295,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     
     #Interface where the user can choose his/her preferencies, separated by columns
     fluidRow(
-        column(width = 4),
+        column(width = 2),
         column(width = 4,
                   #Choose your favourite photoperiod
                  conditionalPanel(condition = "input.navigation_bar == 'clusters' || input.navigation_bar == 'individual' ",
