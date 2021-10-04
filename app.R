@@ -151,7 +151,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                          choices=c(
                              "Home" = "home",
                              "Cluster Functional Analysis" = "clusters",
-                             "Individual Gene Exploration" = "individual"
+                             "Individual Gene Exploration" = "individual",
                             "Tutorials" = "tutorials",
                              "GitHub repository" = "github",
                              "Citation and Contact" = "citation"
@@ -304,9 +304,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                       "Short days (Winter)" = "SD"
                                             ))),
                #Transcriptome or proteome?
-               conditionalPanel(condition = "input.navigation_bar == 'individual' || input.navigation_bar == 'clusters' ",    
+               conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
                                 #Choose the kind of analysis that you want us to execute 
-                                radioButtons(inputId = "analysis",
+                                radioButtons(inputId = "omics",
                                              label="Are you interested in proteomics or transcriptomics?",
                                              choices=c("Transcriptomics rules!" = "rna",
                                                        "Proteomics nerd" = "prot",
@@ -483,49 +483,28 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                )
               ),
               
-              ## Main panel containing the results organized in different tabs for gene 
-              ## genomic loci functional annotation
+              ## Main panel containing the results for graphical representation of expression/amount of protein profiles 
+              ##and statistical analysis of their rhythmicity
               
               conditionalPanel(condition = "input.navigation_bar == 'individual'",
                                hidden(div(id='loading.circ',h3('Please be patient, we are working on it ...'))), 
-                               hidden(div(id='ready.circ',h3('Your genomic loci analysis is ready!'))),
+                               hidden(div(id='ready.circ',h3('Here are the results!!'))),
                                tabsetPanel(type = "tabs",
-                                           tabPanel(tags$b("Marked Genes Table"),
-                                                    tags$br(), 
-                                                    htmlOutput(outputId = "textTableAnnotatedGenes"),
-                                                    tags$br(), 
-                                                    dataTableOutput(outputId = "output_gene_chip_table"),
-                                                    uiOutput(outputId = "download_gene_chip_table"),
-                                                    tags$br(), tags$br()),
-                                           tabPanel(tags$b("Overlapping Gene Parts Distribution"),
+                                           tabPanel(tags$b("Graphical representation"),
                                                     tags$br(),
-                                                    htmlOutput(outputId = "piechart.text"),
                                                     div(style= "text-align: center;",
-                                                        plotOutput(outputId = "annotation.pie.chart",inline=TRUE))), 
-                                           tabPanel(tags$b("Distance to TSS Visualization"),
-                                                    tags$br(),
-                                                    htmlOutput(outputId = "tss.distance.text"),      
-                                                    tags$br(), 
-                                                    plotOutput(outputId = "distance.to.tss",inline=TRUE),
-                                                    tags$br(), tags$br()),
-                                           tabPanel(tags$b("Individual Genes Visualization"),
-                                                    tags$br(), 
-                                                    htmlOutput(outputId = "gene.signal.text"),
-                                                    tags$br(),
-                                                    uiOutput(outputId = "annotated_genes"),
-                                                    tags$br(), tags$br()),
-                                           tabPanel(tags$b("TSS/TES signal visualization"),
-                                                    hidden(div(id='loading.tss.signal',h3('Please be patient, computing singal around TSS ...'))), 
-                                                    hidden(div(id='ready.tss.signal',h3('Your signal around TSS is computed!'))),
-                                                    tags$br(),
-                                                    htmlOutput(outputId = "tss.signal.text"),      
-                                                    tags$br(), 
-                                                    plotOutput(outputId = "tss_signal"),
-                                                    tags$br(), tags$br())
-                               )
-              )
-    )
-))
+                                                        plotOutput(outputId = "circadian.plot",inline=TRUE))
+                                                    ),
+                                           tabPanel(tags$b("Statistical analysis"),
+                                                    tags$br(), tags$br(),
+                                                    dataTableOutput(outputId = "output_statistical_table"),
+                                                    uiOutput(outputId = "download_ui_for_statistical_table"),
+                                                    tags$br(), tags$br(),
+                                                    br(), br()),
+                                           ))
+             
+                                                    
+)))
 
 server <- shinyServer(function(input, output, session) {
     
