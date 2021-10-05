@@ -137,6 +137,302 @@ kegg.module.link <- function(kegg.module)
 }
 
 
+####SD plot
+plot.sd.ll <- function(gene.id, gene.expression)
+{
+  sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.sd.ll <- gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),
+                                                             paste(sd.zt,2,sep="_"),
+                                                             paste(sd.zt,3,sep="_"),
+                                                             paste(sd.zt,4,sep="_"),
+                                                             paste(sd.zt,5,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.sd.ll)
+  max.expression <- max(current.gene.expression.sd.ll)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.sd.ll[1,]),type="o",lwd=3,col="red",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=30),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),5),las=2,lwd=3)
+  
+  polygon(x = c(1,3,3,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(3,7,7,3),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(7,9,9,7),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(9,13,13,9),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(13,15,15,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(15,19,19,15),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(19,21,21,19),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(21,25,25,21),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="salmon")
+  
+  polygon(x = c(25,27,27,25),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  polygon(x = c(27,30,30,27),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="salmon")
+  
+}
+
+plot.sd.dd <- function(gene.id, gene.expression)
+{
+  sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.sd.ll <- gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),
+                                                             paste(sd.zt,2,sep="_"),
+                                                             paste(sd.zt,3,sep="_"),
+                                                             paste(sd.zt,6,sep="_"),
+                                                             paste(sd.zt,7,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.sd.ll)
+  max.expression <- max(current.gene.expression.sd.ll)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.sd.ll),type="o",lwd=3,col="red",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=30),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),5),las=2,lwd=3)
+  
+  polygon(x = c(1,3,3,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(3,7,7,3),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(7,9,9,7),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(9,13,13,9),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(13,15,15,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(15,19,19,15),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(19,21,21,19),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="salmon")
+  
+  polygon(x = c(21,25,25,21),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(25,27,27,25),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="salmon")
+  polygon(x = c(27,30,30,27),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+}
+
+####LD plots
+plot.ld.ll <- function(gene.id, gene.expression)
+{
+  ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.ld.ll <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
+                                                             paste(ld.zt,2,sep="_"),
+                                                             paste(ld.zt,3,sep="_"),
+                                                             paste(ld.zt,4,sep="_"),
+                                                             paste(ld.zt,5,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.ld.ll)
+  max.expression <- max(current.gene.expression.ld.ll)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.ld.ll),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=30),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),5),las=2,lwd=3)
+  
+  polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(5,7,7,5),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(7,11,11,7),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(11,13,13,11),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(13,17,17,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(17,19,19,17),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(19,23,23,19),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(23,25,25,23),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="lightblue")
+  
+  polygon(x = c(25,29,29,25),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue")
+  polygon(x = c(29,30,30,29),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="lightblue")
+  
+}
+
+plot.ld.dd <- function(gene.id, gene.expression)
+{
+  ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.ld.ll <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
+                                                             paste(ld.zt,2,sep="_"),
+                                                             paste(ld.zt,3,sep="_"),
+                                                             paste(ld.zt,6,sep="_"),
+                                                             paste(ld.zt,7,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.ld.ll)
+  max.expression <- max(current.gene.expression.ld.ll)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.ld.ll),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=30),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),5),las=2,lwd=3)
+  
+  polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(5,7,7,5),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(7,11,11,7),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(11,13,13,11),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(13,17,17,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(17,19,19,17),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(19,23,23,19),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="lightblue")
+  
+  polygon(x = c(23,25,25,23),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(25,29,29,25),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="lightblue")
+  polygon(x = c(29,30,30,29),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+}
+
+
+
 # Define UI
 ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     theme = shinytheme("flatly"),
@@ -325,15 +621,6 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                ),
         column(width = 4,
                
-               conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
-                                #Choose the kind of analysis that you are interested in
-                                radioButtons(inputId = "continuo",
-                                             label="Would you like to combine your favourite photoperiod with 
-                                             continuous light or darkness conditions?",
-                                             choices=c("Continuous light" = "LL",
-                                                       "Continuous darkness" = "DD",
-                                                       "My favourite photoperiod is enough" = "3days"
-                                             ))),
                #Transcriptome or proteome?
                conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
                                 #Choose the kind of analysis that you are interested in
@@ -342,6 +629,15 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                              choices=c("Transcriptomics rules!" = "rna",
                                                        "Proteomics nerd" = "prot",
                                                        "Multi-omics integration for the win!" = "integration"
+                                             ))),
+               conditionalPanel(condition = "input.navigation_bar == 'individual' && input.omics == 'rna' ",    
+                                #Choose the kind of analysis that you are interested in
+                                radioButtons(inputId = "continuo",
+                                             label="Would you like to combine your favourite photoperiod with 
+                                             continuous light or darkness conditions?",
+                                             choices=c("Continuous light" = "LL",
+                                                       "Continuous darkness" = "DD",
+                                                       "My favourite photoperiod is enough" = "3days"
                                              ))),
               #choose the analysis to execute
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",    
@@ -923,6 +1219,102 @@ assocated to the enriched pathway represented in the corresponding row."
         
     })
     })
+    
+observeEvent(input$circ.button, {
+  shinyjs::showElement(id = 'loading.circ')
+  shinyjs::hideElement(id = 'ready.circ')
+  
+  #Remove previous results
+  #output$intro_go <- renderText(expr = "")
+  output$output_statistical_table <- renderDataTable("")
+  output$download_ui_for_statistical_table<- renderUI(expr = NULL)
+  output$circadian.plot <- renderPlot(expr = NULL)
+  
+  if(input$omics == "rna" || input$omics == "integration")
+
+    {
+    #extract gene expression levels of the target gene.
+  target.gene <- as.character(input$gene)
+  #target.gene <-"ostta01g00060"
+  total.gene.expression <- read.table(file = "gene_expression.tsv", header =T)
+  gene.expression<- total.gene.expression[target.gene,]
+  
+  }  else if (input$omics == "prot" || input$omics == "integration")
+  {
+    #Extract protein abundance levels of the corresponding target gene
+    target.prot <- as.character(input$gene)
+    #target.prot <-"ostta01g00060"
+    swath.normalized.data.SD <- read.table(file = "sd_swath_processed_data.tsv",header=T,sep="\t")
+    rownames(swath.normalized.data.SD)<- swath.normalized.data.SD$X
+    swath.normalized.data.SD$X <- NULL
+    
+    swath.normalized.data.LD <- read.table(file = "swath_processed_data.tsv",header=T,sep="\t")
+    swath.normalized.data.LD[,"zt20_2"] <- swath.normalized.data.LD[,"zt16_2"]
+    swath.normalized.data.LD[,"zt16_2"] <- swath.normalized.data.LD[,"zt20_2"]
+    
+    zts.omics <- c(paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 1, sep = "_"),
+                   paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 2, sep = "_"),
+                   paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 3, sep = "_"))
+    proteins.carotenoids.SD <- na.omit(swath.normalized.data.SD[target.prot,])
+    proteins.carotenoids.SD <- proteins.carotenoids.SD[,zts.omics]
+    proteins.carotenoids.LD <- na.omit(swath.normalized.data.LD[target.prot,])
+    proteins.carotenoids.LD <- proteins.carotenoids.LD[,zts.omics]
+  }
+  
+  if(input$omics == "rna")
+  {
+    if(input$season == "SD" && input$continuo == "LL")
+    {
+      gene.expression.SD.LL <- gene.expression[,43:72]
+      output$circadian.plot<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.sd.ll(gene.id=target.gene, 
+                     gene.expression=gene.expression.SD.LL)
+          
+        })
+      
+    }else if (input$season == "SD" && input$continuo == "DD")
+      {
+      
+      output$circadian.plot<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.sd.dd(gene.id=target.gene, 
+                     gene.expression=total.gene.expression)
+          
+        })
+      
+    }else if (input$season== "LD" && input$continuo == "LL")
+      {
+      output$circadian.plot <- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.ld.ll(gene.id=target.gene, 
+                     gene.expression=total.gene.expression)
+        })
+          
+      
+    }else if (input$season== "LD" && input$continuo == "DD")
+    {
+      output$circadian.plot <- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.ld.dd(gene.id=target.gene, 
+                     gene.expression=total.gene.expression)
+        })
+    }
+  }
+  
+})
     
     
 # Run the application 
