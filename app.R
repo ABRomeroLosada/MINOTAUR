@@ -19,8 +19,8 @@ library(shiny)
 library(shinythemes)
 library(shinyjs)
 ## Load microalgae annotation packages
-# library(org.Otauri.eg.db) 
-##install.packages(pkgs = "./packages/annotation_packages/org.Otauri.eg.db/",repos = NULL,type="source")
+library(org.Otauri.eg.db) 
+install.packages(pkgs = "./org.Otauri.eg.db/",repos = NULL,type="source")
 
 ## Load microalgae genome annotation packages
 # library(TxDb.Otauri.JGI)
@@ -563,7 +563,7 @@ server <- shinyServer(function(input, output, session) {
         ## Extract genes from cluster text files
         file.name <- paste(c("cluster_","peak_",input$zt, ".txt"), collapse="")
         path <- paste(c("clusters_",input$season), collapse="")
-        complete_path<- paste(c(path,filename),collapse="/")
+        complete_path<- paste(c(path,file.name),collapse="/")
         target.genes <- read.table(file=complete_path, header=F,as.is = T, comment.char="")
       
         ## GO term enirchment analysis
