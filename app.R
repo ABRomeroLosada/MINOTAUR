@@ -309,12 +309,12 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",
                                 selectInput(inputId = "zt", label="Choose your favourite time of the day", 
                                             
-                                            choices=c("Sunrise(ZT0)" = "zt0", 
-                                                      "ZT4" = "zt4",
-                                                      "ZT8" = "zt8",
-                                                      "ZT12" = "zt12",
-                                                      "ZT16" = "zt16", 
-                                                      "ZT20" = "zt20"
+                                            choices=c("Sunrise(ZT0)" = "0", 
+                                                      "ZT4" = "4",
+                                                      "ZT8" = "8",
+                                                      "ZT12" = "12",
+                                                      "ZT16" = "16", 
+                                                      "ZT20" = "20"
                                                        ))),
                #Choose your favourite gene
                conditionalPanel(condition = "input.navigation_bar == 'individual'",
@@ -517,93 +517,8 @@ server <- shinyServer(function(input, output, session) {
     output$video_tutorial <- renderUI({
         HTML("<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/ZCWrqOxrdJM\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>")
     })  
-    
-    ## Clear content of gene set text area and previous results
-    observeEvent(input$clear_gene_set, {
-        updateTextAreaInput(session=session, inputId = "clusters",value = "")
-        
-        shinyjs::hideElement(id = 'loading.enrichment.go')
-        shinyjs::hideElement(id = 'ready.enrichment.go')
-        output$intro_go <- renderText(expr = "")
-        output$gene_sanity_go <- renderText(expr = "")
-        output$wrong_genes_go  <- renderText(expr = "")
-        output$textGOTable <- renderText(expr = "")
-        output$output_go_table <- renderDataTable(expr = NULL)
-        output$download_ui_for_go_table<- renderUI(expr = NULL)
-        #output$revigo<- renderUI(expr = NULL)
-        output$go_graph <- renderText(expr = "")
-        output$go.plot <- renderPlot(expr = NULL)
-        output$barplot_text <- renderText("")
-        output$bar.plot <- renderPlot(expr = NULL)
-        output$dotplot_text <- renderText("")
-        output$dot.plot <- renderPlot(expr = NULL)
-        #output$emapplot_text <- renderText("")
-        #output$emap.plot <- renderPlot(expr = NULL)
-        output$cnetplot_text <- renderText("")
-        output$cnet.plot <- renderPlot(expr = NULL)
-        
-        shinyjs::hideElement(id = 'ready.enrichment.kegg')
-        shinyjs::hideElement(id = 'loading.enrichment.kegg')
-        output$intro_kegg <- renderText(expr = "")
-        output$textKEGGTable <- renderText(expr = "")
-        output$output_pathway_table <- renderDataTable(expr = NULL)
-        output$textKEGGImage <- renderText(expr = "")
-        output$kegg_selectize <- renderUI(expr = NULL)
-        output$kegg_image <- renderImage(expr = NULL,deleteFile = T)
-        output$text_module_kegg <- renderText(expr = "")
-        output$output_module_table <- renderDataTable(expr = NULL)
-    })
-    
-    ## Clear content of genomic regions set text area
-    observeEvent(input$clear_genomic_regions, {
-        updateTextAreaInput(session=session, inputId = "genomic_regions",value = "")
-        output$textTableAnnotatedGenes <- renderText(expr = "")
-        output$output_gene_chip_table <- renderDataTable(expr = NULL)
-        output$download_gene_chip_table <- renderUI(expr = NULL)
-        output$piechart.text <- renderText(expr = "")
-        output$annotation.pie.chart <- renderPlot(expr = NULL)
-        output$tss.distance.text <- renderText(expr = "")
-        output$distance.to.tss <- renderPlot(expr = NULL)
-        output$gene.signal.text <- renderText(expr = "")
-        output$annotated_genes <- renderUI(expr = NULL)
-        output$tss.signal.text <- renderText(expr = "")
-        output$tss_signal <- renderPlot(expr = NULL)
-        shinyjs::hideElement(id = 'loading.tss.signal')
-        shinyjs::hideElement(id = 'ready.tss.signal')
-        shinyjs::hideElement(id = 'loading.chip')
-        shinyjs::hideElement(id = 'ready.chip')
-    })
-    
-    ## Clear content of universe set text area
-    observeEvent(input$clear_universe_set, {
-        updateTextAreaInput(session=session, inputId = "background",value = "")
-    })
-    
-    ## Add an example of gene set to text area
-    observeEvent(input$example_genes, {
-        example.file <- paste(c("example_files/example_",input$microalgae,".txt"),collapse="")
-        example.genes <- read.table(file = example.file,header = F,as.is = T,comment.char="",quote="\"")[[1]]
-        updateTextAreaInput(session=session, inputId = "clusters",value = paste(example.genes,collapse="\n"))
-    })
-    
-    ## Add an example of genomic regions to text area
-    observeEvent(input$example_genomic_regions, {
-        example.file <- paste(c("example_files/example_genomic_regions_",input$microalgae,".txt"),collapse="")
-        example.genomic.regions <- read.table(file = example.file,header = F,as.is = T)
-        example.text <- NULL
-        for(i in 1:nrow(example.genomic.regions))
-        {
-            example.text <- paste(example.text,paste(example.genomic.regions[i,],collapse = "\t"),sep="\n")
-        }
-        #print(example.text)
-        updateTextAreaInput(session=session, inputId = "genomic_regions",value = example.text)
-        bw.file <- paste(c("example_files/example_",input$microalgae,".bw"),collapse="")
-        if(file.exists(bw.file))
-        {
-            selected.bigwig.files <- bw.file
-        }
-    })
-    
+  
+ 
     ## Actions to perform after click the go button
     observeEvent(input$go.button , {
         shinyjs::showElement(id = 'loading.enrichment.go')
@@ -639,165 +554,38 @@ server <- shinyServer(function(input, output, session) {
         # Load libraries
         library(clusterProfiler)
         library(pathview)
-        
-        ## Select org.Db 
-        if(input$microalgae == "otauri")
-        {
-            library(org.Otauri.eg.db)
-            org.db <- org.Otauri.eg.db
-            microalgae.genes <- read.table(file = "universe/otauri_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- ostta.gene.link
-        } else if (input$microalgae == "mpusilla")
-        {
-            library(org.MpusillaCCMP1545.eg.db)
-            org.db <- org.MpusillaCCMP1545.eg.db
-            microalgae.genes <- read.table(file = "universe/mpusilla_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- mpusilla.gene.link
-        } else if (input$microalgae == "bprasinos")
-        {
-            library(org.Bprasinos.eg.db)
-            org.db <- org.Bprasinos.eg.db
-            microalgae.genes <- read.table(file = "universe/bathy_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- bathy.gene.link
-        } else if (input$microalgae == "csubellipsoidea")
-        {
-            library(org.Csubellipsoidea.eg.db)
-            org.db <- org.Csubellipsoidea.eg.db
-            microalgae.genes <- read.table(file = "universe/cocsu_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- csubellipsoidea.gene.link
-        } else if (input$microalgae == "creinhardtii")
-        {
-            library(org.Creinhardtii.eg.db)
-            org.db <- org.Creinhardtii.eg.db
-            microalgae.genes <- read.table(file = "universe/cre_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- chlamy.gene.link
-        } else if (input$microalgae == "vcarteri")
-        {
-            library(org.Vcarteri.eg.db)
-            org.db <- org.Vcarteri.eg.db
-            microalgae.genes <- read.table(file = "universe/vocar_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- vcarteri.gene.link
-        } else if (input$microalgae == "dsalina")
-        {
-            library(org.Dsalina.eg.db)
-            org.db <- org.Dsalina.eg.db
-            microalgae.genes <- read.table(file = "universe/dusal_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- dsalina.gene.link
-        } else if (input$microalgae == "hlacustris")
-        {
-            library(org.Hlacustris.eg.db)
-            org.db <- org.Hlacustris.eg.db
-            microalgae.genes <- read.table(file = "universe/hlacustris_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- ncbi.gene.link
-        } else if (input$microalgae == "czofingiensis")
-        {
-            library(org.Czofingiensis.eg.db)
-            org.db <- org.Czofingiensis.eg.db
-            microalgae.genes <- read.table(file = "universe/zofi_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- czofingiensis.gene.link
-        } else if (input$microalgae == "knitens")
-        {
-            library(org.Knitens.eg.db)
-            org.db <- org.Knitens.eg.db
-            microalgae.genes <- read.table(file = "universe/klebsor_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- no.gene.link
-        } else if (input$microalgae == "mendlicherianum")
-        {
-            library(org.Mendlicherianum.eg.db)
-            org.db <- org.Mendlicherianum.eg.db
-            microalgae.genes <- read.table(file = "universe/mesotaenium_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- no.gene.link
-        } else if (input$microalgae == "smuscicola")
-        {
-            library(org.Smuscicola.eg.db)
-            org.db <- org.Smuscicola.eg.db
-            microalgae.genes <- read.table(file = "universe/smuscicola_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- no.gene.link
-        } else if (input$microalgae == "ptricornutum")
-        {
-            library(org.Ptricornutum.eg.db)
-            org.db <- org.Ptricornutum.eg.db
-            microalgae.genes <- read.table(file = "universe/phatri_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- phaeodactylum.gene.link
-        } else if (input$microalgae == "ngaditana")
-        {
-            library(org.Ngaditana.eg.db)
-            org.db <- org.Ngaditana.eg.db
-            microalgae.genes <- read.table(file = "universe/naga_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
-            gene.link.function <- ngaditana.gene.link
-        }  
-        
-        ## Extract genes from text box or uploaded file
-        if(is.null(input$gene_set_file))
-        {
-            target.genes <- as.vector(unlist(strsplit(input$genes, split="\n",
-                                                      fixed = TRUE)[1]))
-        } else
-        {
-            target.genes <- read.table(file=input$gene_set_file$datapath, header = F,as.is = TRUE,comment.char = "")[[1]]
-        }
-        
-        ## Select gene universe
-        if(input$input_mode == "No")
-        {
-            gene.universe <- microalgae.genes #unique(select(org.db,columns = c("GO"),keys=keys(org.db,keytype = "GID"))[["GID"]])
-            universe.text <- " default universe."
-        } else 
-        {
-            if(is.null(input$gene_universe_file))
-            {
-                gene.universe <- as.vector(unlist(strsplit(input$background, split="\n",
-                                                           fixed = TRUE)[1]))
-            } else
-            {
-                gene.universe <- read.table(file=input$gene_universe_file$datapath, header = F,as.is = TRUE)[[1]]
-            }
+        library(org.Otauri.eg.db)
             
-            universe.text <- paste(c(" custom universe (<i>", paste(gene.universe[1:3], collapse=" ")," </i> ...)."), collapse="")
-        }
+        org.db <- org.Otauri.eg.db
+        microalgae.genes <- read.table(file = "otauri_universe.txt",as.is = T, comment.char = "", quote="\"")[[1]]
+        gene.link.function <- ostta.gene.link
         
-        ## Sanity test
-        wrong.genes <- setdiff(target.genes,microalgae.genes)
-        percent.wrong.genes <- length(wrong.genes) / length(target.genes)
-        
-        if(length(wrong.genes) > 0)
-        {
-            gene.sanity.text <- paste(c("<b> ERROR: The following genes have been detected in your target gene set that do not match any gene
-        in our annotation for ", input$microalgae, ". You may consider removing them. Alternatively, check
-        that the right microalgae has been selected and that your gene names follow the right nomenclature. Click on the Example button
-        on top of the text area to input the target gene set to obtain an example of the gene nomenclature expected. If your target gene set
-        has been generated from an RNA-seq experiment please consider using our tool MARACAS to obtain it or use our reference genome sequence
-        and annotation files for your own analysis."),collapse="")
-            
-            output$gene_sanity_go <-renderText(expr = gene.sanity.text)
-            output$wrong_genes_go <- renderText(expr = paste(wrong.genes,collapse="\n"))
-            output$gene_sanity_kegg <-renderText(expr = gene.sanity.text)
-            output$wrong_genes_kegg <- renderText(expr = paste(wrong.genes,collapse="\n"))
-        }
-        
+        ## Extract genes from cluster text files
+        file.name <- paste(c("cluster_","peak_",input$zt, ".txt"), collapse="")
+        path <- paste(c("clusters_",input$season), collapse="")
+        complete_path<- paste(c(path,filename),collapse="/")
+        target.genes <- read.table(file=complete_path, header=F,as.is = T, comment.char="")
+      
         ## GO term enirchment analysis
         if(input$analysis == "kegg")
         {
             output$intro_go <- renderText(expr = "<p style=\"color:blue\"><b> You have chosen only to perform a KEGG enrichment analysis.
                                     Please check the content of the KEGG ENRICHMENT tab.</b></p>")
-        } else if((input$analysis == "go" || input$analysis == "both") && (length(target.genes) == 0))
+        } else if((input$analysis == "go" || input$analysis == "both") && (length(target.genes$V1) == 0))
         {
-            output$intro_go <- renderText(expr = "<p style=\"color:red\"><b> You forgot to input a gene set. Please, paste a gene set in the text box above or
-                                    select a text file containing your gene set of interest.</b></p>")
-        } else if((input$analysis == "go" || input$analysis == "both") && (length(wrong.genes) == 0) && (length(target.genes) > 0))
+            output$intro_go <- renderText(expr = "<p style=\"color:red\"><b> You forgot to select your favourite time of the day. Please, select one. p</b></p>")
+        } else if((input$analysis == "go" || input$analysis == "both") && (length(target.genes$V1) > 0))
         {
             ## Intro text for GO enrichment
             go.intro.text <- paste(c("The tabs below present the results from the <b>GO enrichment analysis</b> 
-                                      performed over the input target genes (<i>",
-                                     paste(target.genes[1:3],collapse=" "),
-                                     "</i> ...) from the microalgae <b> <i>", microalgae.names[input$microalgae],
-                                     " </i> </b> with ", universe.text),collapse="") 
+                                      performed over the genes that peak at (<i>ZT", input$zt,
+                                     "</i> ...) from the microalgae <b> <i> Ostreococcus tauri </i> </b>"),collapse="") 
             
             output$intro_go <- renderText(expr = go.intro.text)
             
             ## Perform GO enrichment
-            enrich.go <- enrichGO(gene          = target.genes,
-                                  universe      = gene.universe,
+            enrich.go <- enrichGO(gene          = target.genes$V1,
+                                  universe      = microalgae.genes,
                                   OrgDb         = org.db,
                                   ont           = input$ontology,
                                   pAdjustMethod = "BH",
@@ -866,28 +654,15 @@ annotated with the GO term represented in the corresponding row."
                 ## Download result
                 output$downloadGOTable<- downloadHandler(
                     filename= function() {
-                        paste("go_enrichment_table_",microalgae.names[input$microalgae] , ".tsv", sep="")
+                        paste("go_enrichment_table_zt",input$zt ,"_",input$season,".tsv", sep="")
                     },
                     content= function(file) {
                         write.table(x = go.result.table,quote = F,sep = "\t",
                                     file=file,row.names=FALSE,col.names=TRUE)
                     })
                 
-                ## Link to REVIGO
-                # revigo.data <- paste(revigo.data <- apply(go.result.table[,c("GO ID", "q-value")], 1, paste, collapse = " "), collapse="\n")
-                # 
-                # url1 <- tags$a("here", href="#", onclick="document.revigoForm.submit();")
-                # url2 <- tags$form(
-                #   name="revigoForm", action="http://revigo.irb.hr/", method="post", target="_blank",
-                #   tags$textarea(name="inputGoList", rows="1", cols="8", class="revigoText",
-                #                 style="visibility: hidden", revigo.data)
-                # )
-                # 
-                # output$revigo<- renderUI(
-                #   tagList("The enriched GO terms above may be redundant. Visualize these results in REViGO in order to remove redundancy. Click", url1, url2)
-                # )
                 
-                go.graph.text <- "The following acyclic graph represents the GO term enrichment
+            go.graph.text <- "The following acyclic graph represents the GO term enrichment
         in the target gene set. Each node stands for a GO term. The color of each node
         indicates the level of significance from grey, non-significant, to intense red,
         highly significant. An arrow is drawn from GO term A to GO term B when A is a more
@@ -931,21 +706,7 @@ corresponding GO term and the total number of annotated genes in the target set.
                     expr = {
                         dotplot(enrich.go)
                     })
-                
-                #         output$emapplot_text <- renderText("The following figure consists of an enrichment map where nodes represent enriched GO terms. The
-                #         size of a node is proportional to the number of genes annotated with the corresponding GO term in the target set.
-                # The node colors represent the level of significance from less signficant in blue to more significant in red. Edges are drawn
-                # between two nodes when the corresponding GO terms are semantically related. Right click on the image to download it.")
-                #         
-                #         ##EMAP plot
-                #         output$emap.plot <- renderPlot(
-                #           width     = 870,
-                #           height    = 600,
-                #           res       = 120,
-                #           expr = {
-                #             emapplot(enrich.go)
-                #           })
-                
+              
                 output$cnetplot_text <- renderText("The following figure corresponds to a gene-concept network. The beige
 nodes represents GO terms and the grey nodes genes. An edge is drawn from a gene to a GO term when the gene is annotated
 with the corresponding gene. The size of nodes representing GO terms is proportional to the number of genes annotated
@@ -969,9 +730,7 @@ with the corresponding GO term. Right click on the image to download it.")
                 output$barplot_text <- renderText(expr = "<b>No GO term enrichment detected 
                                          in the input gene set.</b>")
                 output$dotplot_text <- renderText(expr = "<b>No GO term enrichment detected 
-                                         in the input gene set.</b>")
-                #output$emapplot_text <- renderText(expr = "<b>No GO term enrichment detected 
-                #                                 in the input gene set.</b>")        
+                                         in the input gene set.</b>")  
                 output$cnetplot_text <- renderText(expr = "<b>No GO term enrichment detected 
                                          in the input gene set.</b>")        
             }
@@ -985,283 +744,22 @@ with the corresponding GO term. Right click on the image to download it.")
         {
             output$intro_kegg <- renderText(expr = "<p style=\"color:blue\"><b> You have chosen only to perform a GO enrichment analysis.
                                     Please check the content of the GO ENRICHMENT tab.</b></p>")
-        } else if((input$analysis == "kegg" || input$analysis == "both") && (length(target.genes) == 0))
+        } else if((input$analysis == "kegg" || input$analysis == "both") && (length(target.genes$V1) == 0))
         {
-            output$intro_kegg <- renderText(expr = "<p style=\"color:red\"><b> You forgot to input a gene set. Please, paste a gene set in the text box above or
-                                    select a text file containing your gene set of interest.</b></p>")
-        } else if( (input$analysis == "kegg"  || input$analysis == "both") && (length(wrong.genes) == 0))
+            output$intro_kegg <- renderText(expr = "<p style=\"color:red\"><b> You forgot to select your favourite time of the day. Please, select one. p</b></p>")
+        } else if( (input$analysis == "kegg"  || input$analysis == "both") && (length(target.genes$V1) > 0))
         {
             shinyjs::showElement(id = 'loading.enrichment.kegg')
             shinyjs::hideElement(id = 'ready.enrichment.kegg')
             
             ## Update target genes and universe depending on the microalgae
-            if(input$microalgae == "otauri")
-            {
-                target.genes <- paste0("OT_",target.genes)
-                gene.universe <- paste0("OT_",gene.universe)
+                target.genes <- paste0("OT_",target.genes$V1)
+                gene.universe <- paste0("OT_",microalgae.genes)
                 organism.id <- "ota"
-            } else if (input$microalgae == "mpusilla")
-            {
-                mpusilla.ko <- AnnotationDbi::select(org.MpusillaCCMP1545.eg.db,columns = c("KO"),keys=keys(org.MpusillaCCMP1545.eg.db,keytype = "GID"))
-                ko.universe <- mpusilla.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(mpusilla.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                for(i in 1:nrow(pathway.enrichment))
-                {
-                    current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                    
-                    current.genes <- c()
-                    for(j in 1:length(current.Ks))
-                    {
-                        current.genes <- c(current.genes,subset(mpusilla.ko, KO == current.Ks[j])$GID)
-                    }
-                    
-                    pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                }
-            } else if(input$microalgae == "bprasinos")
-            {
-                gene.universe <- AnnotationDbi::select(org.Bprasinos.eg.db,columns = c("GID"),keys=keys(org.Bprasinos.eg.db,keytype = "GID"))[[1]]
-                
-                organism.id <- "bpg"
-            } else if(input$microalgae == "vcarteri")
-            {
-                vocar.volcadraft.map <- AnnotationDbi::select(org.Vcarteri.eg.db,columns = c("VOLCADRAFT"),keys=keys(org.Vcarteri.eg.db,keytype = "GID"))
-                vocar.ids <- vocar.volcadraft.map$GID
-                volcadraft.ids <- vocar.volcadraft.map$VOLCADRAFT
-                names(volcadraft.ids) <- vocar.ids
-                names(vocar.ids) <- volcadraft.ids
-                
-                target.genes <- volcadraft.ids[target.genes]
-                names(target.genes) <- NULL
-                
-                gene.universe <- volcadraft.ids[gene.universe]
-                names(gene.universe) <- NULL
-                
-                organism.id <- "vcn"
-            } else if (input$microalgae == "csubellipsoidea")
-            {
-                csubellipsoidea.ko <- AnnotationDbi::select(org.Csubellipsoidea.eg.db,columns = c("KO"),keys=keys(org.Csubellipsoidea.eg.db,keytype = "GID"))
-                ko.universe <- csubellipsoidea.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(csubellipsoidea.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                for(i in 1:nrow(pathway.enrichment))
-                {
-                    current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                    
-                    current.genes <- c()
-                    for(j in 1:length(current.Ks))
-                    {
-                        current.genes <- c(current.genes,subset(csubellipsoidea.ko, KO == current.Ks[j])$GID)
-                    }
-                    
-                    pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                }
-            } else if(input$microalgae == "creinhardtii")
-            {
-                cre.chlredraft.map <- AnnotationDbi::select(org.Creinhardtii.eg.db,columns = c("CHLREDRAFT"),keys=keys(org.Creinhardtii.eg.db,keytype = "GID"))
-                cre.ids <- cre.chlredraft.map$GID
-                chlredraft.ids <- cre.chlredraft.map$CHLREDRAFT
-                names(chlredraft.ids) <- cre.ids
-                names(cre.ids) <- chlredraft.ids
-                
-                target.genes <- chlredraft.ids[target.genes]
-                names(target.genes) <- NULL
-                
-                gene.universe <- chlredraft.ids[gene.universe]
-                names(gene.universe) <- NULL
-                
-                organism.id <- "cre"
-            } else if(input$microalgae == "dsalina")
-            {
-                dsalina.ko <- AnnotationDbi::select(org.Dsalina.eg.db,columns = c("KO"),keys=keys(org.Dsalina.eg.db,keytype = "GID"))
-                ko.universe <- dsalina.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(dsalina.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                for(i in 1:nrow(pathway.enrichment))
-                {
-                    current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                    
-                    current.genes <- c()
-                    for(j in 1:length(current.Ks))
-                    {
-                        current.genes <- c(current.genes,subset(dsalina.ko, KO == current.Ks[j])$GID)
-                    }
-                    
-                    pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                }
-            } else if(input$microalgae == "ptricornutum")
-            {
-                phatri.draft.map <- AnnotationDbi::select(org.Ptricornutum.eg.db,columns = c("PHATRIDRAFT"),keys=keys(org.Ptricornutum.eg.db,keytype = "GID"))
-                phatri.ids <- phatri.draft.map$GID
-                phatridraft.ids <- phatri.draft.map$PHATRIDRAFT
-                names(phatridraft.ids) <- phatri.ids
-                names(phatri.ids) <- phatridraft.ids
-                
-                target.genes <- phatridraft.ids[target.genes]
-                names(target.genes) <- NULL
-                
-                gene.universe <- phatridraft.ids[gene.universe]
-                names(gene.universe) <- NULL
-                
-                organism.id <- "pti"
-            } else if(input$microalgae == "ngaditana")
-            {
-                naga.draft.map <- AnnotationDbi::select(org.Ngaditana.eg.db,columns = c("NAGADRAFT"),keys=keys(org.Ngaditana.eg.db,keytype = "GID"))
-                naga.ids <- naga.draft.map$GID
-                nagadraft.ids <- naga.draft.map$NAGADRAFT
-                names(nagadraft.ids) <- naga.ids
-                names(naga.ids) <- nagadraft.ids
-                
-                target.genes <- nagadraft.ids[target.genes]
-                names(target.genes) <- NULL
-                
-                gene.universe <- nagadraft.ids[gene.universe]
-                names(gene.universe) <- NULL
-                
-                organism.id <- "ngd"
-            } else if(input$microalgae == "knitens")
-            {
-                knitens.ko <- AnnotationDbi::select(org.Knitens.eg.db,columns = c("KO"),keys=keys(org.Knitens.eg.db,keytype = "GID"))
-                ko.universe <- knitens.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(knitens.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                for(i in 1:nrow(pathway.enrichment))
-                {
-                    current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                    
-                    current.genes <- c()
-                    for(j in 1:length(current.Ks))
-                    {
-                        current.genes <- c(current.genes,subset(knitens.ko, KO == current.Ks[j])$GID)
-                    }
-                    
-                    pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                }
-            } else if(input$microalgae == "mendlicherianum")
-            {
-                mendlicherianum.ko <- AnnotationDbi::select(org.Mendlicherianum.eg.db,columns = c("KO"),keys=keys(org.Mendlicherianum.eg.db,keytype = "GID"))
-                ko.universe <- mendlicherianum.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(mendlicherianum.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                for(i in 1:nrow(pathway.enrichment))
-                {
-                    current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                    
-                    current.genes <- c()
-                    for(j in 1:length(current.Ks))
-                    {
-                        current.genes <- c(current.genes,subset(mendlicherianum.ko, KO == current.Ks[j])$GID)
-                    }
-                    
-                    pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                }
-            } else if(input$microalgae == "smuscicola")
-            {
-                smuscicola.ko <- AnnotationDbi::select(org.Smuscicola.eg.db,columns = c("KO"),keys=keys(org.Smuscicola.eg.db,keytype = "GID"))
-                ko.universe <- smuscicola.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(smuscicola.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                for(i in 1:nrow(pathway.enrichment))
-                {
-                    current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                    
-                    current.genes <- c()
-                    for(j in 1:length(current.Ks))
-                    {
-                        current.genes <- c(current.genes,subset(smuscicola.ko, KO == current.Ks[j])$GID)
-                    }
-                    
-                    pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                }
-            } else if(input$microalgae == "hlacustris")
-            {
-                hlacustris.ko <- AnnotationDbi::select(org.Hlacustris.eg.db,columns = c("KO"),keys=keys(org.Hlacustris.eg.db,keytype = "GID"))
-                ko.universe <- hlacustris.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(hlacustris.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                if(nrow(pathway.enrichment) > 1)
-                {
-                    for(i in 1:nrow(pathway.enrichment))
-                    {
-                        current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                        
-                        current.genes <- c()
-                        for(j in 1:length(current.Ks))
-                        {
-                            current.genes <- c(current.genes,subset(hlacustris.ko, KO == current.Ks[j])$GID)
-                        }
-                        
-                        pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                    }
-                }
-            } else if(input$microalgae == "czofingiensis")
-            {
-                zofi.ko <- AnnotationDbi::select(org.Czofingiensis.eg.db,columns = c("KO"),keys=keys(org.Czofingiensis.eg.db,keytype = "GID"))
-                ko.universe <- zofi.ko$KO
-                ko.universe <- ko.universe[!is.na(ko.universe)]
-                
-                target.ko <- subset(zofi.ko,GID %in% target.genes)$KO
-                target.ko <- target.ko[!is.na(target.ko)]
-                
-                pathway.enrichment <- as.data.frame(enrichKEGG(gene = target.ko, organism = "ko", universe = ko.universe,qvalueCutoff = input$pvalue))
-                
-                for(i in 1:nrow(pathway.enrichment))
-                {
-                    current.Ks <- strsplit(pathway.enrichment$geneID[i],split="/")[[1]]
-                    
-                    current.genes <- c()
-                    for(j in 1:length(current.Ks))
-                    {
-                        current.genes <- c(current.genes,subset(zofi.ko, KO == current.Ks[j])$GID)
-                    }
-                    
-                    pathway.enrichment$geneID[i] <- paste(intersect(unique(current.genes),target.genes),collapse="/")
-                }
-            }         
             
             ## Compute KEGG pathway enrichment
-            if (input$microalgae != "hlacustris" && input$microalgae != "knitens" && 
-                input$microalgae != "czofingiensis" && input$microalgae != "mpusilla" &&
-                input$microalgae != "mendlicherianum" && input$microalgae != "smuscicola" &&
-                input$microalgae != "dsalina" && input$microalgae != "csubellipsoidea")
-            {
-                pathway.enrichment <- enrichKEGG(gene = target.genes, organism = organism.id, keyType = "kegg",
-                                                 universe = gene.universe,qvalueCutoff = input$pvalue)
+               pathway.enrichment <- enrichKEGG(gene = target.genes$V1, organism = organism.id, keyType = "kegg",
+                                                 universe = microalgae.genes,qvalueCutoff = input$pvalue)
             }
             shinyjs::showElement(id = 'ready.enrichment.kegg')
             shinyjs::hideElement(id = 'loading.enrichment.kegg')
@@ -1269,11 +767,9 @@ with the corresponding GO term. Right click on the image to download it.")
             pathway.enrichment.result <- as.data.frame(pathway.enrichment)
             if(nrow(pathway.enrichment.result) > 0)
             {
-                kegg.intro.text <- paste(c("This tab presents the results from the <b>KEGG pathways/modules enrichment analysis</b> 
-                                      performed over the input target genes (<i>",
-                                           paste(gsub(pattern="OT_",replacement="",x=target.genes[1:3]),collapse=" "),
-                                           "</i> ...) from the microalgae <b> <i>", microalgae.names[input$microalgae],
-                                           " </i> </b> with ", universe.text),collapse="") 
+                kegg.intro.text <- paste(c("The tabs below present the results from the <b>KEGG pathways/modules enrichment analysis</b> 
+                                      performed over the genes that peak at (<i>ZT", input$zt,
+                                           "</i> ...) from the microalgae <b> <i> Ostreococcus tauri </i> </b>"),collapse="") 
                 output$intro_kegg <- renderText(expr = kegg.intro.text)
                 
                 pathways.enrichment <- compute.enrichments(gene.ratios = pathway.enrichment.result$GeneRatio,
