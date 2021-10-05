@@ -19,8 +19,8 @@ library(shiny)
 library(shinythemes)
 library(shinyjs)
 ## Load microalgae annotation packages
-library(org.Otauri.eg.db) 
-install.packages(pkgs = "./org.Otauri.eg.db/",repos = NULL,type="source")
+#library(org.Otauri.eg.db) 
+#install.packages(pkgs = "./org.Otauri.eg.db/",repos = NULL,type="source")
 
 ## Load microalgae genome annotation packages
 # library(TxDb.Otauri.JGI)
@@ -383,7 +383,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
               #Main panel containing the results organized in different tabs: GO map, Go terms data table, and 
               #KEGG pathway maps for gene set enrichment analysis
               
-              conditionalPanel(condition = "(input.navigation_bar == 'clusters')",
+              conditionalPanel(condition = "input.navigation_bar == 'clusters'",
                                tabsetPanel(type ="tabs",
                                            tabPanel(tags$b("GO ENRICHMENT"),
                                                     shinyjs::useShinyjs(),
@@ -428,14 +428,6 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                                              plotOutput(outputId = "dot.plot",inline=TRUE)),
                                                                          tags$br(),
                                                                          tags$br(), tags$br()),
-                                                                # tabPanel(tags$b("GO Emap"),
-                                                                #          tags$br(),
-                                                                #          htmlOutput(outputId = "emapplot_text"),
-                                                                #          tags$br(),
-                                                                #          div(style= "text-align: center;",
-                                                                #              plotOutput(outputId = "emap.plot",inline=TRUE)),
-                                                                #          tags$br(),
-                                                                #          tags$br(), tags$br()),
                                                                 tabPanel(tags$b("GO Concept Map"),
                                                                          tags$br(),
                                                                          htmlOutput(outputId = "cnetplot_text"),
@@ -561,7 +553,7 @@ server <- shinyServer(function(input, output, session) {
         gene.link.function <- ostta.gene.link
         
         ## Extract genes from cluster text files
-        file.name <- paste(c("cluster_","peak_",input$zt, ".txt"), collapse="")
+        file.name <- paste(c("cluster_","peak_",as.character(input$zt), ".txt"), collapse="")
         path <- paste(c("clusters_",input$season), collapse="")
         complete_path<- paste(c(path,file.name),collapse="/")
         target.genes <- read.table(file=complete_path, header=F,as.is = T, comment.char="")
@@ -758,8 +750,8 @@ with the corresponding GO term. Right click on the image to download it.")
                 organism.id <- "ota"
             
             ## Compute KEGG pathway enrichment
-               pathway.enrichment <- enrichKEGG(gene = target.genes$V1, organism = organism.id, keyType = "kegg",
-                                                 universe = microalgae.genes,qvalueCutoff = input$pvalue)
+               pathway.enrichment <- enrichKEGG(gene = target.genes, organism = organism.id, keyType = "kegg",
+                                                 universe = gene.universe,qvalueCutoff = input$pvalue)
             }
             shinyjs::showElement(id = 'ready.enrichment.kegg')
             shinyjs::hideElement(id = 'loading.enrichment.kegg')
