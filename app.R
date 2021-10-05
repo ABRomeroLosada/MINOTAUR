@@ -431,6 +431,63 @@ plot.ld.dd <- function(gene.id, gene.expression)
   
 }
 
+#### SD and LD plots
+gene.id<-target.gene
+ld.gene.expression <- total.gene.expression
+sd.gene.expression<- total.gene.expression
+plot.ld.sd.ll <- function(gene.id, gene.name, ld.gene.expression,sd.gene.expression,ld=T,sd=T)
+{
+  ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.ld <- ld.gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),paste(ld.zt,2,sep="_"),paste(ld.zt,3,sep="_"),
+                                                                   paste(ld.zt,4,sep="_"),paste(ld.zt,5,sep="_"))]
+  
+  sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.sd <- sd.gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),paste(sd.zt,2,sep="_"),paste(sd.zt,3,sep="_"),
+                                                                   paste(sd.zt,4,sep="_"),paste(sd.zt,5,sep="_"))]
+  
+  max.expr <- max(c(as.numeric(current.gene.expression.ld), as.numeric(current.gene.expression.sd)))
+  min.expr <- min(c(as.numeric(current.gene.expression.ld), as.numeric(current.gene.expression.sd)))
+  
+  plot(x = -10,y= -10,axes=F,xlab="",ylab="",
+       ylim=c(min.expr-2, max.expr),xlim=c(0,72),
+       main=gene.id,cex.main=2)
+  
+  if(ld)
+    lines(x =seq(from=1,to=length(current.gene.expression.ld[1,])),current.gene.expression.ld,type="o",lwd=3,col="blue")
+  
+  if(sd)
+    lines(x = seq(from=1,to=length(current.gene.expression.ld[1,])),current.gene.expression.sd,type="o",lwd=3,col="red")
+  
+  for(i in 0:2)
+  {
+    current.line <- 0.5
+    
+    if(ld)
+    {
+      polygon(x = c(24*i, 24*i+16, 24*i+16, 24*i),
+              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
+              lwd=2,border="blue")
+      polygon(x = c(24*i+16,24*(i+1),24*(i+1),24*i+16),
+              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
+              lwd=2,border="blue",col="blue")
+      current.line <- current.line + 0.5
+    }
+    
+    
+    if(sd)
+    {
+      polygon(x = c(24*i, 24*i+8, 24*i+8, 24*i),
+              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
+              lwd=2,border="red")
+      polygon(x = c(24*i+8,24*(i+1),24*(i+1),24*i+8),
+              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
+              lwd=2,border="red",col="red")
+    }
+  }
+  
+  return(0)  
+}
+
 
 
 # Define UI
@@ -1311,7 +1368,18 @@ observeEvent(input$circ.button, {
           plot.ld.dd(gene.id=target.gene, 
                      gene.expression=total.gene.expression)
         })
+    }else if (input$season== "both")
+    {
+      output$circadian.plot <- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.ld.sd(gene.id=target.gene, 
+                     gene.expression=total.gene.expression)
+        })
     }
+      
   }
   
 })
