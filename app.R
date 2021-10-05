@@ -324,9 +324,19 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                           placeholder = "ostta07g03440"))
                ),
         column(width = 4,
+               
+               conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
+                                #Choose the kind of analysis that you are interested in
+                                radioButtons(inputId = "continuo",
+                                             label="Would you like to combine your favourite photoperiod with 
+                                             continuous light or darkness conditions?",
+                                             choices=c("Continuous light" = "LL",
+                                                       "Continuous darkness" = "DD",
+                                                       "My favourite photoperiod is enough" = "3days"
+                                             ))),
                #Transcriptome or proteome?
                conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
-                                #Choose the kind of analysis that you want us to execute 
+                                #Choose the kind of analysis that you are interested in
                                 radioButtons(inputId = "omics",
                                              label="Are you interested in proteomics or transcriptomics?",
                                              choices=c("Transcriptomics rules!" = "rna",
