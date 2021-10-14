@@ -512,7 +512,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
         column(
             width = 8,
             tags$div(align = "center", 
-                     tags$h1(tags$b("ALGAEFUN with MARACAS"), tags$br()),
+                     tags$h1(tags$b("OsttaCIRC"), tags$br()),
                      tags$h2("microALGAE FUNctional enrichment tool for MicroAlgae RnA-seq and Chip-seq AnalysiS")),
             tags$br(),tags$br(),
             conditionalPanel(condition = "input.navigation_bar == 'home'",
