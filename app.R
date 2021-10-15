@@ -358,17 +358,19 @@ plot.ld.ll <- function(gene.id, gene.expression)
   
 }
 
+# gene.id<-selected.gene
+# gene.expression <- total.gene.expression
 plot.ld.dd <- function(gene.id, gene.expression)
 {
   ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
-  current.gene.expression.ld.ll <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
+  current.gene.expression.ld.dd <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
                                                              paste(ld.zt,2,sep="_"),
                                                              paste(ld.zt,3,sep="_"),
                                                              paste(ld.zt,6,sep="_"),
                                                              paste(ld.zt,7,sep="_"))]
   
-  min.expression <- min(current.gene.expression.ld.ll)
-  max.expression <- max(current.gene.expression.ld.ll)
+  min.expression <- min(current.gene.expression.ld.dd)
+  max.expression <- max(current.gene.expression.ld.dd)
   range.expression <- max.expression - min.expression
   
   expression.step <- floor(range.expression / 5)
@@ -432,7 +434,7 @@ plot.ld.dd <- function(gene.id, gene.expression)
 }
 
 #### SD and LD plots
-gene.id<-selected.gene
+#gene.id<-selected.gene
 ld.gene.expression <- total.gene.expression
 sd.gene.expression<- total.gene.expression
 plot.ld.sd.ll <- function(gene.id, gene.name, ld.gene.expression,sd.gene.expression,ld=T,sd=T)
@@ -1329,7 +1331,7 @@ assocated to the enriched pathway represented in the corresponding row."
         res       = 120,
         expr = {
           plot.sd.ll(gene.id=selected.gene, 
-                     gene.expression=gene.expression.SD.LL)
+                     gene.expression=total.gene.expression)
           
         })
       #Prepare data for rain analysis
@@ -1398,7 +1400,7 @@ assocated to the enriched pathway represented in the corresponding row."
         res       = 120,
         expr = {
           plot.sd.dd(gene.id=selected.gene, 
-                     gene.expression=gene.expression.SD.DD)
+                     gene.expression=total.gene.expression)
           
         })
       #Prepare data for rain analysis
@@ -1472,7 +1474,7 @@ assocated to the enriched pathway represented in the corresponding row."
         res       = 120,
         expr = {
           plot.ld.ll(gene.id=selected.gene, 
-                     gene.expression=gene.expression.LD.LL)
+                     gene.expression=total.gene.expression)
         })
       #Prepare data for rain analysis
       new.time.points.order <- c(paste("ld_", "zt00_", seq(from=1, to=3), sep=""),
@@ -1533,6 +1535,7 @@ assocated to the enriched pathway represented in the corresponding row."
       
     }else if (input$season== "LD" && input$continuo == "DD")
     {
+      
       gene.expression.LD.DD <- c(as.numeric(gene.expression[,1:18]), as.numeric(gene.expression[,31:42]))
       names <-c(names(gene.expression[,1:18]), names(gene.expression[,31:42]))
       names(gene.expression.LD.DD) <- names
@@ -1542,7 +1545,7 @@ assocated to the enriched pathway represented in the corresponding row."
         res       = 120,
         expr = {
           plot.ld.dd(gene.id=selected.gene, 
-                     gene.expression=gene.expression.LD.DD)
+                     gene.expression=total.gene.expression)
         })
       #Prepare data for rain analysis
       new.time.points.order <- c(paste("ld_", "zt00_", seq(from=1, to=3), sep=""),
@@ -1551,7 +1554,7 @@ assocated to the enriched pathway represented in the corresponding row."
                                  paste("ld_", "zt12_", seq(from=1, to=3), sep=""),
                                  paste("ld_", "zt16_", seq(from=1, to=3), sep=""),
                                  paste("ld_", "zt20_", seq(from=1, to=3), sep=""))
-      gene.expression.rain <- gene.expression.LD.DD[,new.time.points.order]
+      gene.expression.rain <- gene.expression.LD.DD[new.time.points.order]
       head(gene.expression.rain)
       
       
@@ -1561,7 +1564,7 @@ assocated to the enriched pathway represented in the corresponding row."
                          paste( "zt12_", seq(from=1, to=3), sep=""),
                          paste( "zt16_", seq(from=1, to=3), sep=""),
                          paste( "zt20_", seq(from=1, to=3), sep=""))
-      colnames(gene.expression.rain) <- new.rain.order
+      names(gene.expression.rain) <- new.rain.order
       library(rain)
       rain24.ld<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
       rain12.ld<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
@@ -1569,17 +1572,17 @@ assocated to the enriched pathway represented in the corresponding row."
       ###rain for DD conditions
       new.time.points.order <- c(paste("ld_", "zt00_", seq(from=2, to=3), sep=""),
                                  paste("ld_", "zt00_", seq(from=6, to=7), sep=""),
-                                 paste("ld_", "zt04_", seq(from=2, to=5), sep=""),
+                                 paste("ld_", "zt04_", seq(from=2, to=3), sep=""),
                                  paste("ld_", "zt04_", seq(from=6, to=7), sep=""),
-                                 paste("ld_", "zt08_", seq(from=2, to=5), sep=""),
+                                 paste("ld_", "zt08_", seq(from=2, to=3), sep=""),
                                  paste("ld_", "zt08_", seq(from=6, to=7), sep=""),
-                                 paste("ld_", "zt12_", seq(from=2, to=5), sep=""),
+                                 paste("ld_", "zt12_", seq(from=2, to=3), sep=""),
                                  paste("ld_", "zt12_", seq(from=6, to=7), sep=""),
-                                 paste("ld_", "zt16_", seq(from=2, to=5), sep=""),
+                                 paste("ld_", "zt16_", seq(from=2, to=3), sep=""),
                                  paste("ld_", "zt16_", seq(from=6, to=7), sep=""),
-                                 paste("ld_", "zt20_", seq(from=2, to=5), sep=""),
+                                 paste("ld_", "zt20_", seq(from=2, to=3), sep=""),
                                  paste("ld_", "zt20_", seq(from=6, to=7), sep=""))
-      gene.expression.rain <- gene.expression.LD.DD[,new.time.points.order]
+      gene.expression.rain <- gene.expression.LD.DD[new.time.points.order]
       
       new.rain.order <-c(paste( "zt0_", seq(from=2, to=5), sep=""),
                          paste( "zt4_", seq(from=2, to=5), sep=""),
@@ -1587,11 +1590,11 @@ assocated to the enriched pathway represented in the corresponding row."
                          paste( "zt12_", seq(from=2, to=5), sep=""),
                          paste( "zt16_", seq(from=2, to=5), sep=""),
                          paste( "zt20_", seq(from=2, to=5), sep=""))
-      colnames(gene.expression.rain) <- new.rain.order
+      names(gene.expression.rain) <- new.rain.order
       
       library(rain)
-      rain24.ld.ll<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
-      rain12.ld.ll<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
+      rain24.ld.dd<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.ld.dd<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
       rain.results <- matrix(ncol=2, nrow=2)
       rownames(rain.results) <- c("LD", "LD+DD")
