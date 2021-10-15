@@ -1428,17 +1428,17 @@ assocated to the enriched pathway represented in the corresponding row."
       ###rain for DD conditions
       new.time.points.order <- c(paste("sd_", "zt00_", seq(from=2, to=3), sep=""),
                                  paste("sd_", "zt00_", seq(from=6, to=7), sep=""),
-                                 paste("sd_", "zt04_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt04_", seq(from=2, to=3), sep=""),
                                  paste("sd_", "zt04_", seq(from=6, to=7), sep=""),
-                                 paste("sd_", "zt08_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt08_", seq(from=2, to=3), sep=""),
                                  paste("sd_", "zt08_", seq(from=6, to=7), sep=""),
-                                 paste("sd_", "zt12_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt12_", seq(from=2, to=3), sep=""),
                                  paste("sd_", "zt12_", seq(from=6, to=7), sep=""),
-                                 paste("sd_", "zt16_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt16_", seq(from=2, to=3), sep=""),
                                  paste("sd_", "zt16_", seq(from=6, to=7), sep=""),
-                                 paste("sd_", "zt20_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt20_", seq(from=2, to=3), sep=""),
                                  paste("sd_", "zt20_", seq(from=6, to=7), sep=""))
-      gene.expression.rain <- gene.expression.SD.LL[,new.time.points.order]
+      gene.expression.rain <- gene.expression.SD.DD[,new.time.points.order]
       
       new.rain.order <-c(paste( "zt0_", seq(from=2, to=5), sep=""),
                          paste( "zt4_", seq(from=2, to=5), sep=""),
@@ -1593,8 +1593,8 @@ assocated to the enriched pathway represented in the corresponding row."
       names(gene.expression.rain) <- new.rain.order
       
       library(rain)
-      rain24.ld.dd<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
-      rain12.ld.dd<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
+      rain24.ld.dd <- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.ld.dd <- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
       rain.results <- matrix(ncol=2, nrow=2)
       rownames(rain.results) <- c("LD", "LD+DD")
