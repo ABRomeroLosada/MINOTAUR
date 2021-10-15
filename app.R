@@ -1438,7 +1438,7 @@ assocated to the enriched pathway represented in the corresponding row."
                                  paste("sd_", "zt16_", seq(from=6, to=7), sep=""),
                                  paste("sd_", "zt20_", seq(from=2, to=3), sep=""),
                                  paste("sd_", "zt20_", seq(from=6, to=7), sep=""))
-      gene.expression.rain <- gene.expression.SD.DD[,new.time.points.order]
+      gene.expression.rain <- gene.expression.SD.DD[new.time.points.order]
       
       new.rain.order <-c(paste( "zt0_", seq(from=2, to=5), sep=""),
                          paste( "zt4_", seq(from=2, to=5), sep=""),
@@ -1446,7 +1446,7 @@ assocated to the enriched pathway represented in the corresponding row."
                          paste( "zt12_", seq(from=2, to=5), sep=""),
                          paste( "zt16_", seq(from=2, to=5), sep=""),
                          paste( "zt20_", seq(from=2, to=5), sep=""))
-      colnames(gene.expression.rain) <- new.rain.order
+      names(gene.expression.rain)<- new.rain.order
       
       library(rain)
       rain24.sd.dd<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
