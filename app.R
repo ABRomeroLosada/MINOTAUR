@@ -1398,7 +1398,7 @@ assocated to the enriched pathway represented in the corresponding row."
         res       = 120,
         expr = {
           plot.sd.dd(gene.id=selected.gene, 
-                     gene.expression=total.gene.expression)
+                     gene.expression=gene.expression.SD.DD)
           
         })
       #Prepare data for rain analysis
@@ -1472,7 +1472,7 @@ assocated to the enriched pathway represented in the corresponding row."
         res       = 120,
         expr = {
           plot.ld.ll(gene.id=selected.gene, 
-                     gene.expression=total.gene.expression)
+                     gene.expression=gene.expression.LD.LL)
         })
       #Prepare data for rain analysis
       new.time.points.order <- c(paste("ld_", "zt00_", seq(from=1, to=3), sep=""),
