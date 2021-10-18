@@ -1665,25 +1665,26 @@ assocated to the enriched pathway represented in the corresponding row."
    #####Circacompare analysis
       library(circacompare)
       time.points <- seq(from=0,by=4,length.out = 18)
-      circacompare.SD.LD <- matrix(nrow=15,ncol=1)
+      circacompare.SD.LD <- matrix(nrow=15,ncol=2)
       current.gene <- selected.gene
       circacomp.data <- data.frame(time=c(time.points,time.points),
                                    measure=c(t(gene.expression.LD/max(gene.expression.LD)),
                                              t(gene.expression.SD/max(gene.expression.SD))),
-                                   group=c(rep("selected gene under LD conditions",18),rep("selected gene under SD conditions",18)))
+                                   group=c(rep("Selected gene under LD conditions",18),rep("selected gene under SD conditions",18)))
       
       result.i<- circacompare(x = circacomp.data, 
                               col_time = "time", 
                               col_group = "group", 
                               col_outcome = "measure",
                               alpha_threshold = 1)
-      circacompare.SD.LD[,1] <- result.i[[2]][,2]
-      colnames(circacompare.SD.LD) <- selected.gene
+      circacompare.SD.LD[,2] <- result.i[[2]][,2]
+      colnames(circacompare.SD.LD) <- c(selected.gene,"")
       rownames(circacompare.SD.LD) <- result.i[[2]][,1]
+      circacompare.SD.LD[,1] <- result.i[[2]][,1]
       
       output$output_statistical_table <- renderDataTable({
         circacompare.SD.LD 
-      },escape=FALSE,options =list(pageLength = 5))
+      },escape=FALSE,options =list(pageLength = 15))
       
       output$circacompare<- renderPlot(
           width     = 870,
