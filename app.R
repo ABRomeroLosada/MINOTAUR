@@ -1290,15 +1290,14 @@ assocated to the enriched pathway represented in the corresponding row."
   output$circadian.plot <- renderPlot(expr = NULL)
   
   if(input$omics == "rna" || input$omics == "integration")
-
-    {
+  {
     #extract gene expression levels of the target gene.
   selected.gene <- as.character(input$gene)
   #selected.gene <-"ostta01g00060"
   total.gene.expression <- read.table(file = "gene_expression.tsv", header =T)
   gene.expression<- total.gene.expression[selected.gene,]
   
-  }  else if (input$omics == "prot" || input$omics == "integration")
+  }else if (input$omics == "prot" || input$omics == "integration")
   {
     #Extract protein abundance levels of the corresponding target gene
     target.prot <- as.character(input$gene)
@@ -1322,7 +1321,52 @@ assocated to the enriched pathway represented in the corresponding row."
   
   if(input$omics == "rna")
   {
-    if(input$season == "SD" && input$continuo == "LL")
+    if(input$season == "SD" && input$continuo == "3days")
+    {
+      gene.expression.SD <- gene.expression[,43:60]
+      output$circadian.plot<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.sd.ll(gene.id=selected.gene, 
+                     gene.expression=total.gene.expression)
+          
+        })
+      #Prepare data for rain analysis
+      new.time.points.order <- c(paste("sd_", "zt00_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt04_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt08_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt12_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt16_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt20_", seq(from=1, to=3), sep=""))
+      gene.expression.rain <- gene.expression.SD[,new.time.points.order]
+      head(gene.expression.rain)
+      
+      
+      new.rain.order <-c(paste( "zt0_", seq(from=1, to=3), sep=""),
+                         paste( "zt4_", seq(from=1, to=3), sep=""),
+                         paste( "zt8_", seq(from=1, to=3), sep=""),
+                         paste( "zt12_", seq(from=1, to=3), sep=""),
+                         paste( "zt16_", seq(from=1, to=3), sep=""),
+                         paste( "zt20_", seq(from=1, to=3), sep=""))
+      colnames(gene.expression.rain) <- new.rain.order
+      library(rain)
+      rain24.sd<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.sd<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
+      
+      
+      rain.results <- matrix(ncol=2, nrow=1)
+      rownames(rain.results) <- c("SD")
+      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      rain.results["SD","Period 24h"] <- rain24.sd$pVal
+      rain.results["SD","Period 12h"] <- rain12.sd$pVal
+      
+      output$output_statistical_table <- renderDataTable({
+        rain.results 
+      },escape=FALSE,options =list(pageLength = 5))
+      
+    }else if (input$season == "SD" && input$continuo == "LL")
     {
       gene.expression.SD.LL <- gene.expression[,43:72]
       output$circadian.plot<- renderPlot(
@@ -1465,7 +1509,51 @@ assocated to the enriched pathway represented in the corresponding row."
       },escape=FALSE,options =list(pageLength = 5))
       
       
-    }else if (input$season== "LD" && input$continuo == "LL")
+    }else if (input$season == "LD" && input$continuo == "3days")
+      { 
+      gene.expression.LD <- gene.expression[,1:18]
+      output$circadian.plot <- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.ld.ll(gene.id=selected.gene, 
+                     gene.expression=total.gene.expression)
+        })
+      #Prepare data for rain analysis
+      new.time.points.order <- c(paste("ld_", "zt00_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt04_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt08_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt12_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt16_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt20_", seq(from=1, to=3), sep=""))
+      gene.expression.rain <- gene.expression.LD[,new.time.points.order]
+      head(gene.expression.rain)
+      
+      
+      new.rain.order <-c(paste( "zt0_", seq(from=1, to=3), sep=""),
+                         paste( "zt4_", seq(from=1, to=3), sep=""),
+                         paste( "zt8_", seq(from=1, to=3), sep=""),
+                         paste( "zt12_", seq(from=1, to=3), sep=""),
+                         paste( "zt16_", seq(from=1, to=3), sep=""),
+                         paste( "zt20_", seq(from=1, to=3), sep=""))
+      colnames(gene.expression.rain) <- new.rain.order
+      library(rain)
+      rain24.ld<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.ld<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
+      
+      rain.results <- matrix(ncol=2, nrow=1)
+      rownames(rain.results) <- c("LD")
+      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      rain.results["LD","Period 24h"] <- rain24.ld$pVal
+      rain.results["LD","Period 12h"] <- rain12.ld$pVal
+      
+      output$output_statistical_table <- renderDataTable({
+        rain.results 
+      },escape=FALSE,options =list(pageLength = 5))
+      
+      
+       }else if (input$season== "LD" && input$continuo == "LL")
       {
       gene.expression.LD.LL <- gene.expression[,1:30]
       output$circadian.plot <- renderPlot(
