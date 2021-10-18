@@ -1307,9 +1307,10 @@ assocated to the enriched pathway represented in the corresponding row."
       rain12.sd<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
       
-      rain.results <- matrix(ncol=2, nrow=1)
+      rain.results <- matrix(ncol=3, nrow=1)
       rownames(rain.results) <- c("SD")
-      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      colnames(rain.results) <- c("", "Period 24h", "Period 12h")
+      rain.results[,1] <-"Rhythmicity under short day (SD) conditions"
       rain.results["SD","Period 24h"] <- rain24.sd$pVal
       rain.results["SD","Period 12h"] <- rain12.sd$pVal
       
@@ -1372,9 +1373,11 @@ assocated to the enriched pathway represented in the corresponding row."
       rain24.sd.ll<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
       rain12.sd.ll<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
-      rain.results <- matrix(ncol=2, nrow=2)
+      rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("SD", "SD+LL")
-      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      rain.results[,1] <- c("Rhythmicity under short day (SD) conditions", 
+                            "Rhythmicity under constant light conditions (after SD)")
       rain.results["SD","Period 24h"] <- rain24.sd$pVal
       rain.results["SD","Period 12h"] <- rain12.sd$pVal
       rain.results["SD+LL","Period 24h"] <- rain24.sd.ll$pVal
@@ -1447,9 +1450,11 @@ assocated to the enriched pathway represented in the corresponding row."
       rain24.sd.dd<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
       rain12.sd.dd<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
-      rain.results <- matrix(ncol=2, nrow=2)
+      rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("SD", "SD+DD")
-      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      rain.results[,1] <- c("Rhythmicity under short day (SD) conditions", 
+                            "Rhythmicity under constant darkness conditions (after SD)")
       rain.results["SD","Period 24h"] <- rain24.sd$pVal
       rain.results["SD","Period 12h"] <- rain12.sd$pVal
       rain.results["SD+DD","Period 24h"] <- rain24.sd.dd$pVal
@@ -1493,9 +1498,10 @@ assocated to the enriched pathway represented in the corresponding row."
       rain24.ld<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
       rain12.ld<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
-      rain.results <- matrix(ncol=2, nrow=1)
+      rain.results <- matrix(ncol=3, nrow=1)
       rownames(rain.results) <- c("LD")
-      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      rain.results[,1] <- "Rhythmicity under long day conditions"
       rain.results["LD","Period 24h"] <- rain24.ld$pVal
       rain.results["LD","Period 12h"] <- rain12.ld$pVal
       
@@ -1558,9 +1564,11 @@ assocated to the enriched pathway represented in the corresponding row."
       rain24.ld.ll<- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
       rain12.ld.ll<- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
-      rain.results <- matrix(ncol=2, nrow=2)
+      rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("LD", "LD+LL")
-      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      rain.results[,1] <- c("Rhythmicity under long day (LD) conditions", 
+                            "Rhythmicity under constant light conditions (after LD)")
       rain.results["LD","Period 24h"] <- rain24.ld$pVal
       rain.results["LD","Period 12h"] <- rain12.ld$pVal
       rain.results["LD+LL","Period 24h"] <- rain24.ld.ll$pVal
@@ -1635,9 +1643,11 @@ assocated to the enriched pathway represented in the corresponding row."
       rain24.ld.dd <- rain(as.numeric(gene.expression.rain), deltat=4, period=24, verbose=T, nr.series=3)
       rain12.ld.dd <- rain(as.numeric(gene.expression.rain), deltat=4, period=12, verbose=T, nr.series=3)
       
-      rain.results <- matrix(ncol=2, nrow=2)
+      rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("LD", "LD+DD")
-      colnames(rain.results) <- c("Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      rain.results[,1] <-c("Rhythmicity under long day (LD) conditions",
+                           "Rhythmicity under constant darkness conditions (after LD)")
       rain.results["LD","Period 24h"] <- rain24.ld$pVal
       rain.results["LD","Period 12h"] <- rain12.ld$pVal
       rain.results["LD+DD","Period 24h"] <- rain24.ld.dd$pVal
