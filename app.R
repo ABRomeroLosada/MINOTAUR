@@ -435,60 +435,6 @@ plot.ld.dd <- function(gene.id, gene.expression)
 
 #### SD and LD plots
 #gene.id<-selected.gene
-ld.gene.expression <- total.gene.expression
-sd.gene.expression<- total.gene.expression
-plot.ld.sd.ll <- function(gene.id, gene.name, ld.gene.expression,sd.gene.expression,ld=T,sd=T)
-{
-  ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
-  current.gene.expression.ld <- ld.gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),paste(ld.zt,2,sep="_"),paste(ld.zt,3,sep="_"),
-                                                                   paste(ld.zt,4,sep="_"),paste(ld.zt,5,sep="_"))]
-  
-  sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
-  current.gene.expression.sd <- sd.gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),paste(sd.zt,2,sep="_"),paste(sd.zt,3,sep="_"),
-                                                                   paste(sd.zt,4,sep="_"),paste(sd.zt,5,sep="_"))]
-  
-  max.expr <- max(c(as.numeric(current.gene.expression.ld), as.numeric(current.gene.expression.sd)))
-  min.expr <- min(c(as.numeric(current.gene.expression.ld), as.numeric(current.gene.expression.sd)))
-  
-  plot(x = -10,y= -10,axes=F,xlab="",ylab="",
-       ylim=c(min.expr-2, max.expr),xlim=c(0,72),
-       main=gene.id,cex.main=2)
-  
-  if(ld)
-    lines(x =seq(from=1,to=length(current.gene.expression.ld[1,])),current.gene.expression.ld,type="o",lwd=3,col="blue")
-  
-  if(sd)
-    lines(x = seq(from=1,to=length(current.gene.expression.ld[1,])),current.gene.expression.sd,type="o",lwd=3,col="red")
-  
-  for(i in 0:2)
-  {
-    current.line <- 0.5
-    
-    if(ld)
-    {
-      polygon(x = c(24*i, 24*i+16, 24*i+16, 24*i),
-              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
-              lwd=2,border="blue")
-      polygon(x = c(24*i+16,24*(i+1),24*(i+1),24*i+16),
-              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
-              lwd=2,border="blue",col="blue")
-      current.line <- current.line + 0.5
-    }
-    
-    
-    if(sd)
-    {
-      polygon(x = c(24*i, 24*i+8, 24*i+8, 24*i),
-              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
-              lwd=2,border="red")
-      polygon(x = c(24*i+8,24*(i+1),24*(i+1),24*i+8),
-              y=c(min.expr-current.line, min.expr-current.line, min.expr-(current.line+0.25), min.expr-(current.line +0.25)),
-              lwd=2,border="red",col="red")
-    }
-  }
-  
-  return(0)  
-}
 
 
 
@@ -657,8 +603,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                  selectInput(inputId = "season", label="Choose your favourite photoperiod", 
                                             
                                             choices=c("Long days (Summer)" = "LD", 
-                                                      "Short days (Winter)" = "SD"
-                                            ))),
+                                                      "Short days (Winter)" = "SD",
+                                                      "Both" = "cicle_comparison")
+                                            )),
                
                #Choose your favourite time of the day
                conditionalPanel(condition = "input.navigation_bar == 'clusters'",
@@ -851,6 +798,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                     tags$br(), tags$br(),
                                                     dataTableOutput(outputId = "output_statistical_table"),
                                                     uiOutput(outputId = "download_ui_for_statistical_table"),
+                                                    tags$br(),
+                                                    div(style= "text-align: center;",
+                                                        plotOutput(outputId = "circacompare",inline=TRUE)),
                                                     tags$br(), tags$br(),
                                                     br(), br())
                                            ))
@@ -1288,6 +1238,7 @@ assocated to the enriched pathway represented in the corresponding row."
   output$output_statistical_table <- renderDataTable("")
   output$download_ui_for_statistical_table<- renderUI(expr = NULL)
   output$circadian.plot <- renderPlot(expr = NULL)
+  output$circacompare <- renderPlot(expr = NULL)
   
   if(input$omics == "rna" || input$omics == "integration")
   {
@@ -1434,7 +1385,7 @@ assocated to the enriched pathway represented in the corresponding row."
       },escape=FALSE,options =list(pageLength = 5))
       
     }else if (input$season == "SD" && input$continuo == "DD")
-      {
+    {
       gene.expression.SD.DD <- c(as.numeric(gene.expression[,43:60]), as.numeric(gene.expression[,73:84]))
       names <-c(names(gene.expression[,43:60]), names(gene.expression[,73:84]))
       names(gene.expression.SD.DD) <- names
@@ -1510,7 +1461,7 @@ assocated to the enriched pathway represented in the corresponding row."
       
       
     }else if (input$season == "LD" && input$continuo == "3days")
-      { 
+    { 
       gene.expression.LD <- gene.expression[,1:18]
       output$circadian.plot <- renderPlot(
         width     = 870,
@@ -1554,7 +1505,7 @@ assocated to the enriched pathway represented in the corresponding row."
       
       
        }else if (input$season== "LD" && input$continuo == "LL")
-      {
+    {
       gene.expression.LD.LL <- gene.expression[,1:30]
       output$circadian.plot <- renderPlot(
         width     = 870,
@@ -1697,18 +1648,54 @@ assocated to the enriched pathway represented in the corresponding row."
       },escape=FALSE,options =list(pageLength = 5))
       
       
-    }else if (input$season== "both")
+    }else if (input$season== "cicle_comparison" && input$continuo == "3days")
     {
-      output$circadian.plot <- renderPlot(
-        width     = 870,
-        height    = 600,
-        res       = 120,
-        expr = {
-          plot.ld.sd(gene.id=selected.gene, 
-                     gene.expression=total.gene.expression)
-        })
-    }
+      gene.expression.SD <- gene.expression[,43:60]
+      gene.expression.LD <- gene.expression[,1:18]
       
+      # output$circadian.plot<- renderPlot(
+      #   width     = 870,
+      #   height    = 600,
+      #   res       = 120,
+      #   expr = {
+      #     plot.sd.ll(gene.id=selected.gene, 
+      #                gene.expression=total.gene.expression)
+      #     
+        # })
+   #####Circacompare analysis
+      library(circacompare)
+      time.points <- seq(from=0,by=4,length.out = 18)
+      circacompare.SD.LD <- matrix(nrow=15,ncol=1)
+      current.gene <- selected.gene
+      circacomp.data <- data.frame(time=c(time.points,time.points),
+                                   measure=c(t(gene.expression.LD/max(gene.expression.LD)),
+                                             t(gene.expression.SD/max(gene.expression.SD))),
+                                   group=c(rep("selected gene under LD conditions",18),rep("selected gene under SD conditions",18)))
+      
+      result.i<- circacompare(x = circacomp.data, 
+                              col_time = "time", 
+                              col_group = "group", 
+                              col_outcome = "measure",
+                              alpha_threshold = 1)
+      circacompare.SD.LD[,1] <- result.i[[2]][,2]
+      colnames(circacompare.SD.LD) <- selected.gene
+      rownames(circacompare.SD.LD) <- result.i[[2]][,1]
+      
+      output$output_statistical_table <- renderDataTable({
+        circacompare.SD.LD 
+      },escape=FALSE,options =list(pageLength = 5))
+      
+      output$circacompare<- renderPlot(
+          width     = 870,
+          height    = 600,
+          res       = 120,
+          expr = {
+            result.i$plot
+        })
+      
+    }else if (input$season== "cicle_comparison" && input$continuo == "LL")
+    {ji<-1}else if (input$season== "cicle_comparison" && input$continuo == "DD")
+    {ji<-1}  
   }
   shinyjs::showElement(id = 'ready.circ')
   shinyjs::hideElement(id = 'loading.circ')
