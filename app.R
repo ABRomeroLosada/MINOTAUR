@@ -743,7 +743,7 @@ plot.ld.sd.ll <- function(gene.id, gene.expression)
   
 }
 
-plot.ld.sd.ll <- function(gene.id, gene.expression)
+plot.ld.sd.dd <- function(gene.id, gene.expression)
 {
   ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
   current.gene.expression.ld.dd <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
@@ -2128,7 +2128,110 @@ assocated to the enriched pathway represented in the corresponding row."
         })
       
     }else if (input$season== "cicle_comparison" && input$continuo == "LL")
-    {ji<-1}else if (input$season== "cicle_comparison" && input$continuo == "DD")
+    { 
+      gene.expression.LD.LL <- gene.expression[,1:30]
+      gene.expression.SD.LL <- gene.expression[,43:72]
+      output$circadian.plot<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.ld.sd.ll(gene.id=selected.gene, 
+                     gene.expression=total.gene.expression)
+          
+        })
+      #Prepare data for rain analysis
+      new.time.points.order.sd <- c(paste("sd_", "zt00_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt04_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt08_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt12_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt16_", seq(from=1, to=3), sep=""),
+                                 paste("sd_", "zt20_", seq(from=1, to=3), sep=""))
+      gene.expression.rain.sd <- gene.expression.SD.LL[,new.time.points.order.sd]
+      head(gene.expression.rain.sd)
+      
+      new.time.points.order.ld <- c(paste("ld_", "zt00_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt04_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt08_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt12_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt16_", seq(from=1, to=3), sep=""),
+                                 paste("ld_", "zt20_", seq(from=1, to=3), sep=""))
+      gene.expression.rain.ld <- gene.expression.LD.LL[,new.time.points.order.ld]
+      head(gene.expression.rain.ld)
+      
+      
+      new.rain.order <-c(paste( "zt0_", seq(from=1, to=3), sep=""),
+                         paste( "zt4_", seq(from=1, to=3), sep=""),
+                         paste( "zt8_", seq(from=1, to=3), sep=""),
+                         paste( "zt12_", seq(from=1, to=3), sep=""),
+                         paste( "zt16_", seq(from=1, to=3), sep=""),
+                         paste( "zt20_", seq(from=1, to=3), sep=""))
+      colnames(gene.expression.rain.sd) <- new.rain.order
+      colnames(gene.expression.rain.ld) <- new.rain.order
+      
+      
+      library(rain)
+      rain24.sd<- rain(as.numeric(gene.expression.rain.sd), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.sd<- rain(as.numeric(gene.expression.rain.sd), deltat=4, period=12, verbose=T, nr.series=3)
+      rain24.ld<- rain(as.numeric(gene.expression.rain.ld), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.ld<- rain(as.numeric(gene.expression.rain.ld), deltat=4, period=12, verbose=T, nr.series=3)
+      
+      ###rain for LL conditions
+      new.time.points.order.sd.ll <- c(paste("sd_", "zt00_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt04_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt08_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt12_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt16_", seq(from=2, to=5), sep=""),
+                                 paste("sd_", "zt20_", seq(from=2, to=5), sep=""))
+      gene.expression.rain.sd.ll <- gene.expression.SD.LL[,new.time.points.order.sd.ll]
+      
+      new.time.points.order.ld.ll <- c(paste("ld_", "zt00_", seq(from=2, to=5), sep=""),
+                                       paste("ld_", "zt04_", seq(from=2, to=5), sep=""),
+                                       paste("ld_", "zt08_", seq(from=2, to=5), sep=""),
+                                       paste("ld_", "zt12_", seq(from=2, to=5), sep=""),
+                                       paste("ld_", "zt16_", seq(from=2, to=5), sep=""),
+                                       paste("ld_", "zt20_", seq(from=2, to=5), sep=""))
+      gene.expression.rain.ld.ll <- gene.expression.LD.LL[,new.time.points.order.ld.ll]
+      
+      new.rain.order.ll <-c(paste( "zt0_", seq(from=2, to=5), sep=""),
+                         paste( "zt4_", seq(from=2, to=5), sep=""),
+                         paste( "zt8_", seq(from=2, to=5), sep=""),
+                         paste( "zt12_", seq(from=2, to=5), sep=""),
+                         paste( "zt16_", seq(from=2, to=5), sep=""),
+                         paste( "zt20_", seq(from=2, to=5), sep=""))
+      colnames(gene.expression.rain.sd.ll) <- new.rain.order.ll
+      colnames(gene.expression.rain.ld.ll) <- new.rain.order.ll
+      
+      
+      library(rain)
+      rain24.sd.ll<- rain(as.numeric(gene.expression.rain.sd.ll), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.sd.ll<- rain(as.numeric(gene.expression.rain.sd.ll), deltat=4, period=12, verbose=T, nr.series=3)
+      rain24.ld.ll<- rain(as.numeric(gene.expression.rain.ld.ll), deltat=4, period=24, verbose=T, nr.series=3)
+      rain12.ld.ll<- rain(as.numeric(gene.expression.rain.ld.ll), deltat=4, period=12, verbose=T, nr.series=3)
+      
+      
+      rain.results <- matrix(ncol=3, nrow=4)
+      rownames(rain.results) <- c("SD", "SD+LL","LD", "LD+LL")
+      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      rain.results[,1] <- c("Rhythmicity under short day (SD) conditions", 
+                            "Rhythmicity under constant light conditions (after SD)",
+                            "Rhythmicity under long day (LD) conditions", 
+                            "Rhythmicity under constant light conditions (after LD)")
+      rain.results["SD","Period 24h"] <- rain24.sd$pVal
+      rain.results["SD","Period 12h"] <- rain12.sd$pVal
+      rain.results["LD","Period 24h"] <- rain24.ld$pVal
+      rain.results["LD","Period 12h"] <- rain12.ld$pVal
+      rain.results["SD+LL","Period 24h"] <- rain24.sd.ll$pVal
+      rain.results["SD+LL","Period 12h"] <- rain12.sd.ll$pVal
+      rain.results["LD+LL","Period 24h"] <- rain24.ld.ll$pVal
+      rain.results["LD+LL","Period 12h"] <- rain12.ld.ll$pVal
+      
+      
+      output$output_statistical_table <- renderDataTable({
+        rain.results 
+        },escape=FALSE,options =list(pageLength = 5))
+      
+    }else if (input$season== "cicle_comparison" && input$continuo == "DD")
     {ji<-1}  
   }
   shinyjs::showElement(id = 'ready.circ')
