@@ -266,19 +266,19 @@ plot.sd.ll <- function(gene.id, gene.expression)
 plot.sd.dd <- function(gene.id, gene.expression)
 {
   sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
-  current.gene.expression.sd.ll <- gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),
+  current.gene.expression.sd.dd <- gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),
                                                              paste(sd.zt,2,sep="_"),
                                                              paste(sd.zt,3,sep="_"),
                                                              paste(sd.zt,6,sep="_"),
                                                              paste(sd.zt,7,sep="_"))]
   
-  min.expression <- min(current.gene.expression.sd.ll)
-  max.expression <- max(current.gene.expression.sd.ll)
+  min.expression <- min(current.gene.expression.sd.dd)
+  max.expression <- max(current.gene.expression.sd.dd)
   range.expression <- max.expression - min.expression
   
   expression.step <- floor(range.expression / 5)
   
-  plot(as.numeric(current.gene.expression.sd.ll),type="o",lwd=3,col="red",axes=F,xlab="",ylab="FPKM",
+  plot(as.numeric(current.gene.expression.sd.dd),type="o",lwd=3,col="red",axes=F,xlab="",ylab="FPKM",
        ylim=c(min.expression-expression.step,max.expression),
        cex.lab=1.3,main=gene.id,cex.main=2)
   axis(side=2,lwd=3)
@@ -641,8 +641,8 @@ plot.ld.sd.ll <- function(gene.id, gene.expression)
                                                              paste(sd.zt,4,sep="_"),
                                                              paste(sd.zt,5,sep="_"))]
   
-  min.expression <- min(current.gene.expression.sd, current.gene.expression.ld)
-  max.expression <- max(current.gene.expression.sd, current.gene.expression.ld)
+  min.expression <- min(current.gene.expression.sd.ll, current.gene.expression.ld.ll)
+  max.expression <- max(current.gene.expression.sd.ll, current.gene.expression.ld.ll)
   range.expression <- max.expression - min.expression
   
   expression.step <- floor(range.expression / 5)
@@ -743,6 +743,123 @@ plot.ld.sd.ll <- function(gene.id, gene.expression)
   
 }
 
+plot.ld.sd.ll <- function(gene.id, gene.expression)
+{
+  ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.ld.dd <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
+                                                             paste(ld.zt,2,sep="_"),
+                                                             paste(ld.zt,3,sep="_"),
+                                                             paste(ld.zt,6,sep="_"),
+                                                             paste(ld.zt,7,sep="_"))]
+  
+  sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.sd.dd <- gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),
+                                                             paste(sd.zt,2,sep="_"),
+                                                             paste(sd.zt,3,sep="_"),
+                                                             paste(sd.zt,6,sep="_"),
+                                                             paste(sd.zt,7,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.sd.dd, current.gene.expression.ld.dd)
+  max.expression <- max(current.gene.expression.sd.dd, current.gene.expression.ld.dd)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.ld.dd),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=30),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),5),las=2,lwd=3)
+  lines(as.numeric(current.gene.expression.sd.dd),type="o",lwd=3,col="red",
+        ylim=c(min.expression-expression.step,max.expression))
+  
+  polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/4,
+                             min.expression-expression.step/4,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step/2),lwd=2,border="blue")
+  polygon(x = c(5,7,7,5),y=c(min.expression-expression.step/4,
+                             min.expression-expression.step/4,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  polygon(x = c(7,11,11,7),y=c(min.expression-expression.step/4,
+                               min.expression-expression.step/4,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step/2),lwd=2,border="blue")
+  polygon(x = c(11,13,13,11),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  polygon(x = c(13,17,17,13),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue")
+  polygon(x = c(17,19,19,17),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  polygon(x = c(19,23,23,19),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="lightblue")
+  polygon(x = c(23,25,25,23),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  polygon(x = c(25,29,29,25),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="lightblue")
+  polygon(x = c(29,30,30,29),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  
+  
+  
+  polygon(x = c(1,3,3,1),y=c(min.expression-expression.step/1.3,
+                             min.expression-expression.step/1.3,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  polygon(x = c(3,7,7,3),y=c(min.expression-expression.step/1.3,
+                             min.expression-expression.step/1.3,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red",col="red")
+  polygon(x = c(7,9,9,7),y=c(min.expression-expression.step/1.3,
+                             min.expression-expression.step/1.3,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  polygon(x = c(9,13,13,9),y=c(min.expression-expression.step/1.3,
+                               min.expression-expression.step/1.3,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="red",col="red")
+  polygon(x = c(13,15,15,13),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  polygon(x = c(15,19,19,15),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  polygon(x = c(19,21,21,19),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="salmon")
+  polygon(x = c(21,25,25,21),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  polygon(x = c(25,27,27,25),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="salmon")
+  polygon(x = c(27,30,30,27),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  
+}
 
 # Define UI
 ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
