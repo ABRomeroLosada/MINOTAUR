@@ -138,6 +138,58 @@ kegg.module.link <- function(kegg.module)
 
 
 ####SD plot
+plot.sd <- function(gene.id, gene.expression)
+{
+  sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.sd <- gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),
+                                                             paste(sd.zt,2,sep="_"),
+                                                             paste(sd.zt,3,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.sd)
+  max.expression <- max(current.gene.expression.sd)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.sd[1,]),type="o",lwd=3,col="red",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=18),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
+  
+  polygon(x = c(1,3,3,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(3,7,7,3),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(7,9,9,7),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(9,13,13,9),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(13,15,15,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(15,19,19,15),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+}
+
 plot.sd.ll <- function(gene.id, gene.expression)
 {
   sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
@@ -1280,7 +1332,7 @@ assocated to the enriched pathway represented in the corresponding row."
         height    = 600,
         res       = 120,
         expr = {
-          plot.sd.ll(gene.id=selected.gene, 
+          plot.sd(gene.id=selected.gene, 
                      gene.expression=total.gene.expression)
           
         })
