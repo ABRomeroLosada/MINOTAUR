@@ -1678,7 +1678,7 @@ assocated to the enriched pathway represented in the corresponding row."
                               col_outcome = "measure",
                               alpha_threshold = 1)
       circacompare.SD.LD[,2] <- result.i[[2]][,2]
-      colnames(circacompare.SD.LD) <- c(selected.gene,"")
+      colnames(circacompare.SD.LD) <- c("","")
       rownames(circacompare.SD.LD) <- result.i[[2]][,1]
       circacompare.SD.LD[,1] <- result.i[[2]][,1]
       
