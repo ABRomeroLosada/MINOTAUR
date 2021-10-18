@@ -337,6 +337,58 @@ plot.sd.dd <- function(gene.id, gene.expression)
 }
 
 ####LD plots
+plot.ld <- function(gene.id, gene.expression)
+{
+  ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.ld.ll <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
+                                                             paste(ld.zt,2,sep="_"),
+                                                             paste(ld.zt,3,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.ld.ll)
+  max.expression <- max(current.gene.expression.ld.ll)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.ld.ll),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=18),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
+  
+  polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(5,7,7,5),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(7,11,11,7),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(11,13,13,11),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(13,17,17,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(17,19,19,17),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+}
+
 plot.ld.ll <- function(gene.id, gene.expression)
 {
   ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
@@ -1525,7 +1577,7 @@ assocated to the enriched pathway represented in the corresponding row."
         height    = 600,
         res       = 120,
         expr = {
-          plot.ld.ll(gene.id=selected.gene, 
+          plot.ld(gene.id=selected.gene, 
                      gene.expression=total.gene.expression)
         })
       #Prepare data for rain analysis
