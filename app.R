@@ -1021,8 +1021,16 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     fluidRow(
         column(width = 2),
         column(width = 4,
+               conditionalPanel(condition = "input.navigation_bar == 'clusters'",    
+                                #Choose the kind of analysis that you want us to execute 
+                                radioButtons(inputId = "gene_sets",
+                                             label="Gene sets availables:",
+                                             choices=c("Rhythmic genes sets" = "ritmo",
+                                                       "Sets of genes that peak at a certain time of the day" = "peak"
+                                                       
+                                             ))),
                   #Choose your favourite photoperiod
-                 conditionalPanel(condition = "input.navigation_bar == 'clusters' || input.navigation_bar == 'individual' ",
+                 conditionalPanel(condition = "(input.navigation_bar == 'clusters' && input.gene_sets == 'peak') || input.navigation_bar == 'individual' ",
                                  selectInput(inputId = "season", label="Choose your favourite photoperiod", 
                                             
                                             choices=c("Long days (Summer)" = "LD", 
@@ -1031,7 +1039,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                             )),
                
                #Choose your favourite time of the day
-               conditionalPanel(condition = "input.navigation_bar == 'clusters'",
+               conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'peak'",
                                 selectInput(inputId = "zt", label="Choose your favourite time of the day", 
                                             
                                             choices=c("Sunrise(ZT0)" = "0", 
@@ -1041,6 +1049,28 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                       "ZT16" = "16", 
                                                       "ZT20" = "20"
                                                        ))),
+               conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'ritmo'",
+                                selectInput(inputId = "rhythmic_file", label="Choose your favourite rhythmic pattern", 
+                                            
+                                            choices=c("Rhythmic under long day, constant light and constant dakness conditions" = "LDLLDD", 
+                                                      "Rhythmic under short day, constant light and constant dakness conditions" = "SDLLDD",
+                                                      "Rhythmic under long day and constant light" = "LDLL",
+                                                      "Rhythmic under short day and constant light" = "SDLL",
+                                                      "Rhythmic under long day and constant dakness conditions" = "LDDD",
+                                                      "Rhythmic under short day and constant dakness conditions" = "SDDD",
+                                                      "Genes activated by light and repressed by darkness under long day conditions" ="LDLD",        
+                                                      "Genes activated by light and repressed by darkness under short day conditions" ="SDLD",        
+                                                      "Genes repressed by light and activated by darkness under long day conditions" ="LDDL",
+                                                      "Genes repressed by light and activated by darkness under short day conditions" ="SDDL", 
+                                                      "Rhythmic genes with no clear effect by light or darknes under long day condition" ="noclearLD",
+                                                      "Rhythmic genes with no clear effect by light or darknes under short day condition" ="noclearSD",
+                                                      "No rhythmic genes under long day conditions" = "noLD",
+                                                      "No rhythmic genes under short day conditions" = "noSD")
+                                                      
+                                                      
+                                                      
+                                                      
+                                            )),
                #Choose your favourite gene
                conditionalPanel(condition = "input.navigation_bar == 'individual'",
                                 textInput(inputId= "gene",
