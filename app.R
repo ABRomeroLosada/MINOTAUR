@@ -240,6 +240,70 @@ plot.sd.prot <- function(gene.id, gene.expression)
   
 }
 
+# gene.id <-"ostta05g02426"
+# gene.expression <- total.gene.expression
+# protein.data <- protein.SD
+plot.sd.gene.prot <- function(gene.id, gene.expression, protein.data)
+{
+  
+  sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.sd <- gene.expression[gene.id,c(paste(sd.zt,1,sep="_"),
+                                                          paste(sd.zt,2,sep="_"),
+                                                          paste(sd.zt,3,sep="_"))]
+  current.gene.expression.sd <- current.gene.expression.sd/max(current.gene.expression.sd)
+  current.protein.sd <- protein.data/max(protein.data)
+  
+  
+  min.expression <- min(current.gene.expression.sd, current.protein.sd)
+  max.expression <- max(current.gene.expression.sd, current.protein.sd)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.protein.sd),type="o",lwd=3,col="salmon",axes=F,xlab="",ylab="Abundance",
+       ylim=c(0,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos =-0.1, at = seq(from=1,to=18),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
+  lines(as.numeric(current.gene.expression.sd),type="o",lwd=3,col="red",
+        ylim=c(min.expression-expression.step,max.expression))
+  legend("topright", 
+         legend = c("protein", "gene"), 
+         lwd=2, col = c("salmon", "red"), 
+         lty=c(1,1))
+  polygon(x = c(1,3,3,1),y=c(-0.01,
+                               -0.01,
+                               -0.04,
+                               -0.04),lwd=2,border="red")
+  
+  polygon(x = c(3,7,7,3),y=c(-0.01,
+                             -0.01,
+                             -0.04,
+                             -0.04),lwd=2,border="red",col="red")
+  
+  polygon(x = c(7,9,9,7),y=c(-0.01,
+                             -0.01,
+                             -0.04,
+                             -0.04),lwd=2,border="red")
+  
+  polygon(x = c(9,13,13,9),y=c(-0.01,
+                               -0.01,
+                               -0.04,
+                               -0.04),lwd=2,border="red",col="red")
+  
+  polygon(x = c(13,15,15,13),y=c(-0.01,
+                                 -0.01,
+                                 -0.04,
+                                 -0.04),lwd=2,border="red")
+  
+  polygon(x = c(15,19,19,15),y=c(-0.01,
+                                 -0.01,
+                                 -0.04,
+                                 -0.04),lwd=2,border="red",col="red")
+  
+}
+
 plot.sd.ll <- function(gene.id, gene.expression)
 {
   sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
@@ -486,6 +550,68 @@ plot.ld.prot <- function(gene.id, gene.expression)
                                  min.expression-expression.step/2,
                                  min.expression-expression.step,
                                  min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+}
+
+
+plot.ld.gene.prot <- function(gene.id, gene.expression, protein.data)
+{
+  
+  ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
+  current.gene.expression.ld <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
+                                                          paste(ld.zt,2,sep="_"),
+                                                          paste(ld.zt,3,sep="_"))]
+  current.gene.expression.ld <- current.gene.expression.ld/max(current.gene.expression.ld)
+  current.protein.ld <- protein.data/max(protein.data)
+  
+  
+  min.expression <- min(current.gene.expression.ld, current.protein.ld)
+  max.expression <- max(current.gene.expression.ld, current.protein.ld)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.protein.ld),type="o",lwd=3,col="lightblue",axes=F,xlab="",ylab="Abundance",
+       ylim=c(0,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = -0.1, at = seq(from=1,to=18),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
+  lines(as.numeric(current.gene.expression.ld),type="o",lwd=3,col="blue",
+        ylim=c(min.expression-expression.step,max.expression))
+  legend("topright", 
+         legend = c("protein", "gene"), 
+         lwd=2, col = c("lightblue", "blue"), 
+         lty=c(1,1))
+  polygon(x = c(1,5,5,1),y=c(-0.01,
+                             -0.01,
+                             -0.04,
+                             -0.04),lwd=2,border="blue")
+  
+  polygon(x = c(5,7,7,5),y=c(-0.01,
+                             -0.01,
+                             -0.04,
+                             -0.04),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(7,11,11,7),y=c(-0.01,
+                               -0.01,
+                               -0.04,
+                               -0.04),lwd=2,border="blue")
+  
+  polygon(x = c(11,13,13,11),y=c(-0.01,
+                                 -0.01,
+                                 -0.04,
+                                 -0.04),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(13,17,17,13),y=c(-0.01,
+                                 -0.01,
+                                 -0.04,
+                                 -0.04),lwd=2,border="blue")
+  
+  polygon(x = c(17,19,19,17),y=c(-0.01,
+                                 -0.01,
+                                 -0.04,
+                                 -0.04),lwd=2,border="blue",col="blue")
   
 }
 
@@ -2811,7 +2937,92 @@ assocated to the enriched pathway represented in the corresponding row."
   
   if(input$omics == "integration")
   {
-    both_methods <- 1
+    if(input$season_integration == "SD")
+    {
+      gene.expression.SD <- gene.expression[,43:60]
+      output$circadian.plot<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.sd.gene.prot(gene.id=target.prot,gene.expression = total.gene.expression,protein.data = protein.SD)
+          
+        })
+      #####Circacompare analysis
+      library(circacompare)
+      time.points <- seq(from=0,by=4,length.out = 18)
+      circacompare.gene.prot <- matrix(nrow=15,ncol=2)
+      current.gene <- target.prot
+      circacomp.data <- data.frame(time=c(time.points,time.points),
+                                   measure=c(t(gene.expression.SD/max(gene.expression.SD)),
+                                             t(protein.SD/max(protein.SD))),
+                                   group=c(rep("Selected gene under SD conditions",18),rep("Selected protein under SD conditions",18)))
+      
+      result.i<- circacompare(x = circacomp.data, 
+                              col_time = "time", 
+                              col_group = "group", 
+                              col_outcome = "measure",
+                              alpha_threshold = 1)
+      circacompare.SD.LD[,2] <- result.i[[2]][,2]
+      colnames(circacompare.SD.LD) <- c("","")
+      rownames(circacompare.SD.LD) <- result.i[[2]][,1]
+      circacompare.SD.LD[,1] <- result.i[[2]][,1]
+      
+      output$output_statistical_table <- renderDataTable({
+        circacompare.SD.LD 
+      },escape=FALSE,options =list(pageLength = 15))
+      
+      output$circacompare<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          result.i$plot
+        })
+      
+    }else if (input$season_integration =="LD")
+    {
+      gene.expression.LD <- gene.expression[,1:18]
+      output$circadian.plot<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.ld.gene.prot(gene.id=target.prot,gene.expression = total.gene.expression,protein.data = protein.LD)
+          
+        })
+      #####Circacompare analysis
+      library(circacompare)
+      time.points <- seq(from=0,by=4,length.out = 18)
+      circacompare.gene.prot <- matrix(nrow=15,ncol=2)
+      current.gene <- target.prot
+      circacomp.data <- data.frame(time=c(time.points,time.points),
+                                   measure=c(t(gene.expression.LD/max(gene.expression.LD)),
+                                             t(protein.LD/max(protein.LD))),
+                                   group=c(rep("Selected gene under LD conditions",18),rep("Selected protein under LD conditions",18)))
+      
+      result.i<- circacompare(x = circacomp.data, 
+                              col_time = "time", 
+                              col_group = "group", 
+                              col_outcome = "measure",
+                              alpha_threshold = 1)
+      circacompare.SD.LD[,2] <- result.i[[2]][,2]
+      colnames(circacompare.SD.LD) <- c("","")
+      rownames(circacompare.SD.LD) <- result.i[[2]][,1]
+      circacompare.SD.LD[,1] <- result.i[[2]][,1]
+      
+      output$output_statistical_table <- renderDataTable({
+        circacompare.SD.LD 
+      },escape=FALSE,options =list(pageLength = 15))
+      
+      output$circacompare<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          result.i$plot
+        })
+    }
   }
   
   shinyjs::showElement(id = 'ready.circ')
