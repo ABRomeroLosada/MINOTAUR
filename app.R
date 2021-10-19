@@ -190,6 +190,56 @@ plot.sd <- function(gene.id, gene.expression)
   
 }
 
+plot.sd.prot <- function(gene.id, gene.expression)
+{
+  
+  current.gene.expression.sd <- gene.expression
+  
+  min.expression <- min(current.gene.expression.sd)
+  max.expression <- max(current.gene.expression.sd)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.sd[1,]),type="o",lwd=3,col="red",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=18),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
+  
+  polygon(x = c(1,3,3,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(3,7,7,3),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(7,9,9,7),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(9,13,13,9),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(13,15,15,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(15,19,19,15),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+}
+
 plot.sd.ll <- function(gene.id, gene.expression)
 {
   sd.zt <- paste("sd",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
@@ -343,6 +393,56 @@ plot.ld <- function(gene.id, gene.expression)
   current.gene.expression.ld <- gene.expression[gene.id,c(paste(ld.zt,1,sep="_"),
                                                              paste(ld.zt,2,sep="_"),
                                                              paste(ld.zt,3,sep="_"))]
+  
+  min.expression <- min(current.gene.expression.ld)
+  max.expression <- max(current.gene.expression.ld)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.ld),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=18),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
+  
+  polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(5,7,7,5),y=c(min.expression-expression.step/2,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(7,11,11,7),y=c(min.expression-expression.step/2,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(11,13,13,11),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+  polygon(x = c(13,17,17,13),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue")
+  
+  polygon(x = c(17,19,19,17),y=c(min.expression-expression.step/2,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="blue",col="blue")
+  
+}
+
+plot.ld.prot <- function(gene.id, gene.expression)
+{
+  
+  current.gene.expression.ld <- gene.expression
   
   min.expression <- min(current.gene.expression.ld)
   max.expression <- max(current.gene.expression.ld)
@@ -565,6 +665,86 @@ plot.ld.sd <- function(gene.id, gene.expression)
        labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
   lines(as.numeric(current.gene.expression.sd),type="o",lwd=3,col="red",
        ylim=c(min.expression-expression.step,max.expression))
+  
+  polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/4,
+                             min.expression-expression.step/4,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step/2),lwd=2,border="blue")
+  polygon(x = c(1,3,3,1),y=c(min.expression-expression.step/1.3,
+                             min.expression-expression.step/1.3,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  
+  polygon(x = c(5,7,7,5),y=c(min.expression-expression.step/4,
+                             min.expression-expression.step/4,
+                             min.expression-expression.step/2,
+                             min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  polygon(x = c(3,7,7,3),y=c(min.expression-expression.step/1.3,
+                             min.expression-expression.step/1.3,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  
+  polygon(x = c(7,11,11,7),y=c(min.expression-expression.step/4,
+                               min.expression-expression.step/4,
+                               min.expression-expression.step/2,
+                               min.expression-expression.step/2),lwd=2,border="blue")
+  polygon(x = c(7,9,9,7),y=c(min.expression-expression.step/1.3,
+                             min.expression-expression.step/1.3,
+                             min.expression-expression.step,
+                             min.expression-expression.step),lwd=2,border="red")
+  
+  
+  polygon(x = c(11,13,13,11),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  polygon(x = c(9,13,13,9),y=c(min.expression-expression.step/1.3,
+                               min.expression-expression.step/1.3,
+                               min.expression-expression.step,
+                               min.expression-expression.step),lwd=2,border="red",col="red")
+  
+  polygon(x = c(13,17,17,13),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue")
+  polygon(x = c(13,15,15,13),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red")
+  
+  polygon(x = c(17,19,19,17),y=c(min.expression-expression.step/4,
+                                 min.expression-expression.step/4,
+                                 min.expression-expression.step/2,
+                                 min.expression-expression.step/2),lwd=2,border="blue",col="blue")
+  polygon(x = c(15,19,19,15),y=c(min.expression-expression.step/1.3,
+                                 min.expression-expression.step/1.3,
+                                 min.expression-expression.step,
+                                 min.expression-expression.step),lwd=2,border="red",col="red")
+  
+}
+
+plot.ld.sd.prot <- function(gene.id, gene.expression.SD, gene.expression.LD)
+{
+  current.gene.expression.ld <- gene.expression.LD
+  
+  current.gene.expression.sd <- gene.expression.SD
+  
+  min.expression <- min(current.gene.expression.sd, current.gene.expression.ld)
+  max.expression <- max(current.gene.expression.sd, current.gene.expression.ld)
+  range.expression <- max.expression - min.expression
+  
+  expression.step <- floor(range.expression / 5)
+  
+  plot(as.numeric(current.gene.expression.ld),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+       ylim=c(min.expression-expression.step,max.expression),
+       cex.lab=1.3,main=gene.id,cex.main=2)
+  axis(side=2,lwd=3)
+  axis(side = 1,pos = min.expression - 1.1*expression.step, at = seq(from=1,to=18),
+       labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
+  lines(as.numeric(current.gene.expression.sd),type="o",lwd=3,col="red",
+        ylim=c(min.expression-expression.step,max.expression))
   
   polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/4,
                              min.expression-expression.step/4,
@@ -1247,6 +1427,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
               conditionalPanel(condition = "input.navigation_bar == 'individual'",
                                hidden(div(id='loading.circ',h3('Please be patient, we are working on it ...'))), 
                                hidden(div(id='ready.circ',h3('Here are the results!!'))),
+                               htmlOutput(outputId = "no_protein"),
                                tabsetPanel(type = "tabs",
                                            tabPanel(tags$b("Graphical representation"),
                                                     tags$br(),
@@ -1764,8 +1945,9 @@ assocated to the enriched pathway represented in the corresponding row."
   output$download_ui_for_statistical_table<- renderUI(expr = NULL)
   output$circadian.plot <- renderPlot(expr = NULL)
   output$circacompare <- renderPlot(expr = NULL)
+  output$no_protein <- renderText(expr=NULL)
   
-  if(input$omics == "rna" || input$omics == "integration")
+  if(input$omics == "rna" )
   {
     #extract gene expression levels of the target gene.
   selected.gene <- as.character(input$gene)
@@ -1773,9 +1955,10 @@ assocated to the enriched pathway represented in the corresponding row."
   total.gene.expression <- read.table(file = "gene_expression.tsv", header =T)
   gene.expression<- total.gene.expression[selected.gene,]
   
-  }else if (input$omics == "prot" || input$omics == "integration")
+  }else if (input$omics == "prot")
   {
     #Extract protein abundance levels of the corresponding target gene
+    #target.prot <- "ostta05g02426"
     target.prot <- as.character(input$gene)
     #target.prot <-"ostta01g00060"
     swath.normalized.data.SD <- read.table(file = "sd_swath_processed_data.tsv",header=T,sep="\t")
@@ -1785,14 +1968,174 @@ assocated to the enriched pathway represented in the corresponding row."
     swath.normalized.data.LD <- read.table(file = "swath_processed_data.tsv",header=T,sep="\t")
     swath.normalized.data.LD[,"zt20_2"] <- swath.normalized.data.LD[,"zt16_2"]
     swath.normalized.data.LD[,"zt16_2"] <- swath.normalized.data.LD[,"zt20_2"]
-    
+    head(swath.normalized.data.SD)
     zts.omics <- c(paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 1, sep = "_"),
                    paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 2, sep = "_"),
                    paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 3, sep = "_"))
-    proteins.carotenoids.SD <- na.omit(swath.normalized.data.SD[target.prot,])
-    proteins.carotenoids.SD <- proteins.carotenoids.SD[,zts.omics]
-    proteins.carotenoids.LD <- na.omit(swath.normalized.data.LD[target.prot,])
-    proteins.carotenoids.LD <- proteins.carotenoids.LD[,zts.omics]
+    protein.SD <- na.omit(swath.normalized.data.SD[target.prot,])
+    protein.SD <- protein.SD[,zts.omics]
+    protein.LD <- na.omit(swath.normalized.data.LD[target.prot,])
+    protein.LD <- protein.LD[,zts.omics]
+    
+  } else if (input$omics == "integration")
+  {
+    #Extract protein abundance levels of the corresponding target gene
+    #target.prot <- "ostta05g02426"
+    target.prot <- as.character(input$gene)
+    #target.prot <-"ostta01g00060"
+    swath.normalized.data.SD <- read.table(file = "sd_swath_processed_data.tsv",header=T,sep="\t")
+    rownames(swath.normalized.data.SD)<- swath.normalized.data.SD$X
+    swath.normalized.data.SD$X <- NULL
+    
+    swath.normalized.data.LD <- read.table(file = "swath_processed_data.tsv",header=T,sep="\t")
+    swath.normalized.data.LD[,"zt20_2"] <- swath.normalized.data.LD[,"zt16_2"]
+    swath.normalized.data.LD[,"zt16_2"] <- swath.normalized.data.LD[,"zt20_2"]
+    head(swath.normalized.data.SD)
+    zts.omics <- c(paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 1, sep = "_"),
+                   paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 2, sep = "_"),
+                   paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 3, sep = "_"))
+    protein.SD <- na.omit(swath.normalized.data.SD[target.prot,])
+    protein.SD <- protein.SD[,zts.omics]
+    protein.LD <- na.omit(swath.normalized.data.LD[target.prot,])
+    protein.LD <- protein.LD[,zts.omics]
+    
+    #extract gene expression levels of the target gene.
+    selected.gene <- as.character(input$gene)
+    #selected.gene <-"ostta01g00060"
+    total.gene.expression <- read.table(file = "gene_expression.tsv", header =T)
+    gene.expression<- total.gene.expression[selected.gene,]
+    
+  }
+  
+  if (input$omics == "prot")
+  {
+    if(input$season == "SD")
+    {
+      if (nrow(protein.SD) == 0) {
+        output$no_protein <- renderText(expr = "<p style=\"color:red\"><b> Sorry, there is no protein detected in our data for the gene selected. p</b></p>")
+      }else 
+      {
+        output$circadian.plot<- renderPlot(
+          width     = 870,
+          height    = 600,
+          res       = 120,
+          expr = {
+            plot.sd.prot(gene.id=target.prot, 
+                    gene.expression=protein.SD)
+            
+          })
+        ###rain analysis
+        new.time.points.order <- c(paste("zt0_", seq(from=1, to=3), sep=""),
+                                   paste("zt4_", seq(from=1, to=3), sep=""),
+                                   paste("zt8_", seq(from=1, to=3), sep=""),
+                                   paste("zt12_", seq(from=1, to=3), sep=""),
+                                   paste("zt16_", seq(from=1, to=3), sep=""),
+                                   paste("zt20_", seq(from=1, to=3), sep=""))
+        protein.rain <- protein.SD[,new.time.points.order]
+        head(protein.rain)
+        
+        library(rain)
+        rain24.sd<- rain(as.numeric(protein.rain), deltat=4, period=24, verbose=T, nr.series=3)
+        rain12.sd<- rain(as.numeric(protein.rain), deltat=4, period=12, verbose=T, nr.series=3)
+        
+        
+        rain.results <- matrix(ncol=3, nrow=1)
+        rownames(rain.results) <- c("SD")
+        colnames(rain.results) <- c("", "Period 24h", "Period 12h")
+        rain.results[,1] <-"Rhythmicity under short day (SD) conditions"
+        rain.results["SD","Period 24h"] <- rain24.sd$pVal
+        rain.results["SD","Period 12h"] <- rain12.sd$pVal
+        
+        output$output_statistical_table <- renderDataTable({
+          rain.results 
+        },escape=FALSE,options =list(pageLength = 5))
+        
+        
+      }
+    }else if (input$season == "LD")
+    {
+      if (nrow(protein.LD) == 0) {
+        output$no_protein <- renderText(expr = "<p style=\"color:red\"><b> Sorry, there is no protein detected in our data for the gene selected. p</b></p>")
+      }else 
+      {
+        output$circadian.plot <- renderPlot(
+          width     = 870,
+          height    = 600,
+          res       = 120,
+          expr = {
+            plot.ld.prot(gene.id=target.prot, 
+                    gene.expression=protein.LD)
+          })
+        #Prepare data for rain analysis
+        new.time.points.order <- c(paste("zt0_", seq(from=1, to=3), sep=""),
+                                   paste("zt4_", seq(from=1, to=3), sep=""),
+                                   paste("zt8_", seq(from=1, to=3), sep=""),
+                                   paste("zt12_", seq(from=1, to=3), sep=""),
+                                   paste("zt16_", seq(from=1, to=3), sep=""),
+                                   paste("zt20_", seq(from=1, to=3), sep=""))
+        protein.rain <- protein.LD[,new.time.points.order]
+        head(protein.rain)
+      
+        library(rain)
+        rain24.ld<- rain(as.numeric(protein.rain), deltat=4, period=24, verbose=T, nr.series=3)
+        rain12.ld<- rain(as.numeric(protein.rain), deltat=4, period=12, verbose=T, nr.series=3)
+        
+        rain.results <- matrix(ncol=3, nrow=1)
+        rownames(rain.results) <- c("LD")
+        colnames(rain.results) <- c("","Period 24h", "Period 12h")
+        rain.results[,1] <- "Rhythmicity under long day conditions"
+        rain.results["LD","Period 24h"] <- rain24.ld$pVal
+        rain.results["LD","Period 12h"] <- rain12.ld$pVal
+        
+        output$output_statistical_table <- renderDataTable({
+          rain.results 
+        },escape=FALSE,options =list(pageLength = 5))
+        
+      }
+    }else if (input$seaon == "cicle_comparison")
+    {
+      output$circadian.plot<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          plot.ld.sd.prot(gene.id=selected.gene,gene.expression.SD = protein.SD, 
+                          gene.expression.LD = protein.LD)
+          
+        })
+      #####Circacompare analysis
+      library(circacompare)
+      time.points <- seq(from=0,by=4,length.out = 18)
+      circacompare.SD.LD <- matrix(nrow=15,ncol=2)
+      current.gene <- target.prot
+      circacomp.data <- data.frame(time=c(time.points,time.points),
+                                   measure=c(t(protein.LD/max(protein.LD)),
+                                             t(protein.SD/max(protein.SD))),
+                                   group=c(rep("Selected protein under LD conditions",18),rep("Selected protein under SD conditions",18)))
+      
+      result.i<- circacompare(x = circacomp.data, 
+                              col_time = "time", 
+                              col_group = "group", 
+                              col_outcome = "measure",
+                              alpha_threshold = 1)
+      circacompare.SD.LD[,2] <- result.i[[2]][,2]
+      colnames(circacompare.SD.LD) <- c("","")
+      rownames(circacompare.SD.LD) <- result.i[[2]][,1]
+      circacompare.SD.LD[,1] <- result.i[[2]][,1]
+      
+      output$output_statistical_table <- renderDataTable({
+        circacompare.SD.LD 
+      },escape=FALSE,options =list(pageLength = 15))
+      
+      output$circacompare<- renderPlot(
+        width     = 870,
+        height    = 600,
+        res       = 120,
+        expr = {
+          result.i$plot
+        })
+      
+    }
   }
   
   if(input$omics == "rna")
@@ -2456,6 +2799,12 @@ assocated to the enriched pathway represented in the corresponding row."
     
     }  
   }
+  
+  if(input$omics == "integration")
+  {
+    both_methods <- 1
+  }
+  
   shinyjs::showElement(id = 'ready.circ')
   shinyjs::hideElement(id = 'loading.circ')
 })
