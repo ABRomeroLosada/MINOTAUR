@@ -19,7 +19,7 @@ library(shiny)
 library(shinythemes)
 library(shinyjs)
 ## Load microalgae annotation packages
-#library(org.Otauri.eg.db) 
+library(org.Otauri.eg.db) 
 #install.packages(pkgs = "./org.Otauri.eg.db/",repos = NULL,type="source")
 
 ## Load microalgae genome annotation packages
@@ -1292,6 +1292,8 @@ server <- shinyServer(function(input, output, session) {
         #output$emap.plot <- renderPlot(expr = NULL)
         output$cnetplot_text <- renderText("")
         output$cnet.plot <- renderPlot(expr = NULL)
+        target.genes <- NULL
+        target.genes.kegg <- NULL
         
         output$intro_kegg <- renderText(expr = "")
         output$output_pathway_table <- renderDataTable(expr = NULL)
@@ -1311,20 +1313,85 @@ server <- shinyServer(function(input, output, session) {
         gene.link.function <- ostta.gene.link
         
         ## Extract genes from cluster text files
+        if (input$gene_sets == "peak")
+        {
         file.name <- paste(c("cluster_","peak_",as.character(input$zt), ".txt"), collapse="")
         path <- paste(c("clusters_",input$season), collapse="")
         complete_path<- paste(c(path,file.name),collapse="/")
         target.genes <- read.table(file=complete_path, header=F,as.is = T, comment.char="")
+        #target.genes <- read.table(file="clusters_LD/cluster_peak_12.txt", header=F,as.is = T, comment.char="")
+        target.genes <- target.genes$V1
+        }else if (input$gene_sets == "ritmo")
+        {
+          if (input$rhythmic_file == "LDLLDD")
+          {
+            target.genes <- read.table(file="cluster_rhythmic/LD_LL_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
+            target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "SDLLDD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/SD_LL_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "LDLL")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/LD_and_LL_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "SDLL")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/SD_and_LL_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "LDDD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/LD_and_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "SDDD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/SD_and_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "LDLD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/LD_light_activated_dark_repressed.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "SDLD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/SD_light_activated_dark_repressed.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "LDDL")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/LD_light_repressed_dark_activated.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "SDDL")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/SD_light_repressed_dark_activated.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "noclearLD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/LD_no_clear_effect_light_dark_regulation.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "noclearSD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/SD_no_clear_effect_light_dark_regulation.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "noLD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/LD_non_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }else if (input$rhythmic_file == "noSD")
+            {
+              target.genes <- read.table(file="cluster_rhythmic/SD_non_rhythmic_genes.tsv", header=T, as.is = T, comment.char = "")
+              target.genes <- target.genes$geneID
+            }
+        }
+        
       
         ## GO term enirchment analysis
         if(input$analysis == "kegg")
         {
             output$intro_go <- renderText(expr = "<p style=\"color:blue\"><b> You have chosen only to perform a KEGG enrichment analysis.
                                     Please check the content of the KEGG ENRICHMENT tab.</b></p>")
-        } else if((input$analysis == "go" || input$analysis == "both") && (length(target.genes$V1) == 0))
+        } else if((input$analysis == "go" || input$analysis == "both") && (length(target.genes) == 0))
         {
             output$intro_go <- renderText(expr = "<p style=\"color:red\"><b> You forgot to select your favourite time of the day. Please, select one. p</b></p>")
-        } else if((input$analysis == "go" || input$analysis == "both") && (length(target.genes$V1) > 0))
+        } else if((input$analysis == "go" || input$analysis == "both") && (length(target.genes) > 0))
         {
             ## Intro text for GO enrichment
             go.intro.text <- paste(c("The tabs below present the results from the <b>GO enrichment analysis</b> 
@@ -1332,14 +1399,15 @@ server <- shinyServer(function(input, output, session) {
                                      "</i> ...) from the microalgae <b> <i> Ostreococcus tauri </i> </b>"),collapse="") 
             
             output$intro_go <- renderText(expr = go.intro.text)
-            
             ## Perform GO enrichment
-            enrich.go <- enrichGO(gene          = target.genes$V1,
+            enrich.go <- enrichGO(gene          = target.genes,
                                   universe      = microalgae.genes,
                                   OrgDb         = org.db,
-                                  ont           = input$ontology,
+                                  ont           = #"MF",
+                                    input$ontology,
                                   pAdjustMethod = "BH",
-                                  pvalueCutoff  = input$pvalue,
+                                  pvalueCutoff  = #0.05,
+                                    input$pvalue,
                                   readable      = TRUE,
                                   keyType = "GID")
             
@@ -1494,22 +1562,22 @@ with the corresponding GO term. Right click on the image to download it.")
         {
             output$intro_kegg <- renderText(expr = "<p style=\"color:blue\"><b> You have chosen only to perform a GO enrichment analysis.
                                     Please check the content of the GO ENRICHMENT tab.</b></p>")
-        } else if((input$analysis == "kegg" || input$analysis == "both") && (length(target.genes$V1) == 0))
+        } else if((input$analysis == "kegg" || input$analysis == "both") && (length(target.genes) == 0))
         {
             output$intro_kegg <- renderText(expr = "<p style=\"color:red\"><b> You forgot to select your favourite time of the day. Please, select one. p</b></p>")
-        } else if( (input$analysis == "kegg"  || input$analysis == "both") && (length(target.genes$V1) > 0))
+        } else if( (input$analysis == "kegg"  || input$analysis == "both") && (length(target.genes) > 0))
         {
             shinyjs::showElement(id = 'loading.enrichment.kegg')
             shinyjs::hideElement(id = 'ready.enrichment.kegg')
             
             ## Update target genes and universe depending on the microalgae
-                target.genes <- paste0("OT_",target.genes$V1)
+                target.genes.kegg <- paste0("OT_",target.genes)
                 gene.universe <- paste0("OT_",microalgae.genes)
                 organism.id <- "ota"
             
             ## Compute KEGG pathway enrichment
-               pathway.enrichment <- enrichKEGG(gene = target.genes, organism = organism.id, keyType = "kegg",
-                                                 universe = gene.universe,qvalueCutoff = input$pvalue)
+               pathway.enrichment <- enrichKEGG(gene = target.genes.kegg, organism = organism.id, keyType = "kegg",
+                                                 universe = gene.universe,qvalueCutoff = 0.05) #input$pvalue)
             }
             shinyjs::showElement(id = 'ready.enrichment.kegg')
             shinyjs::hideElement(id = 'loading.enrichment.kegg')
@@ -1575,7 +1643,7 @@ assocated to the enriched pathway represented in the corresponding row."
                    genes.pathway <- rep(0, length(microalgae.genes))
                    names(genes.pathway) <- microalgae.genes
                     
-                  genes.pathway[target.genes$V1] <- 1
+                  genes.pathway[target.genes.kegg] <- 1
                
                 pathways.for.select <- paste(pathways.result.table[["KEGG ID"]], pathways.result.table[["Description"]], sep=" - ")
                 
@@ -1596,7 +1664,7 @@ assocated to the enriched pathway represented in the corresponding row."
             }
             
             #KEGG modules enrichment  
-            modules.enrichment <- enrichMKEGG(gene = target.genes$V1, universe = microalgae.genes, organism = organism.id, keyType = "kegg",minGSSize = 4)
+            modules.enrichment <- enrichMKEGG(gene = target.genes.kegg, universe = microalgae.genes, organism = organism.id, keyType = "kegg",minGSSize = 4)
             
           
             modules.enrichment.result <- as.data.frame(modules.enrichment)
