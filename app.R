@@ -1322,7 +1322,7 @@ server <- shinyServer(function(input, output, session) {
         if (input$gene_sets == "peak")
         {
         file.name <- paste(c("cluster_","peak_",as.character(input$zt), ".txt"), collapse="")
-        path <- paste(c("clusters_",input$season_cluster), collapse="")
+        path <- paste(c("clusters_",input$season_cluster),collapse="")
         complete_path<- paste(c(path,file.name),collapse="/")
         target.genes <- read.table(file=complete_path, header=F,as.is = T, comment.char="")
         #target.genes <- read.table(file="clusters_LD/cluster_peak_12.txt", header=F,as.is = T, comment.char="")
