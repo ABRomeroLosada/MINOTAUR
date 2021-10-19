@@ -1216,13 +1216,16 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                             choices=c("Long days (Summer)" = "LD", 
                                                       "Short days (Winter)" = "SD")
                                             )),
-               conditionalPanel(condition = "input.navigation_bar == 'individual' ",
-                                selectInput(inputId = "season", label="Choose your favourite photoperiod", 
-                                            
-                                            choices=c("Long days (Summer)" = "LD", 
-                                                      "Short days (Winter)" = "SD",
-                                                      "Both" = "cicle_comparison")
-                                )),
+               #Transcriptome or proteome?
+               conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
+                                #Choose the kind of analysis that you are interested in
+                                radioButtons(inputId = "omics",
+                                             label="Are you interested in proteomics or transcriptomics?",
+                                             choices=c("Transcriptomics rules!" = "rna",
+                                                       "Proteomics nerd" = "prot",
+                                                       "Multi-omics integration for the win!" = "integration"
+                                             ))),
+               
                
                #Choose your favourite time of the day
                conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'peak'",
@@ -1266,15 +1269,21 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                ),
         column(width = 4,
                
-               #Transcriptome or proteome?
-               conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
-                                #Choose the kind of analysis that you are interested in
-                                radioButtons(inputId = "omics",
-                                             label="Are you interested in proteomics or transcriptomics?",
-                                             choices=c("Transcriptomics rules!" = "rna",
-                                                       "Proteomics nerd" = "prot",
-                                                       "Multi-omics integration for the win!" = "integration"
-                                             ))),
+               #Favourite photoperiod 
+               conditionalPanel(condition = "input.navigation_bar == 'individual' && ( input.omics == 'rna' || input.omics == 'prot')",
+                                selectInput(inputId = "season", label="Choose your favourite photoperiod", 
+                                            
+                                            choices=c("Long days (Summer)" = "LD", 
+                                                      "Short days (Winter)" = "SD",
+                                                      "Both" = "cicle_comparison")
+                                )),
+               conditionalPanel(condition = "input.navigation_bar == 'individual' && input.omics == 'integration'",
+                                selectInput(inputId = "season_integration", label="Choose your favourite photoperiod", 
+                                            
+                                            choices=c("Long days (Summer)" = "LD", 
+                                                      "Short days (Winter)" = "SD")
+                                )),
+               
                conditionalPanel(condition = "input.navigation_bar == 'individual' && input.omics == 'rna' ",    
                                 #Choose the kind of analysis that you are interested in
                                 radioButtons(inputId = "continuo",
@@ -2092,14 +2101,14 @@ assocated to the enriched pathway represented in the corresponding row."
         },escape=FALSE,options =list(pageLength = 5))
         
       }
-    }else if (input$seaon == "cicle_comparison")
+    }else if (input$season == "cicle_comparison")
     {
       output$circadian.plot<- renderPlot(
         width     = 870,
         height    = 600,
         res       = 120,
         expr = {
-          plot.ld.sd.prot(gene.id=selected.gene,gene.expression.SD = protein.SD, 
+          plot.ld.sd.prot(gene.id=target.prot,gene.expression.SD = protein.SD, 
                           gene.expression.LD = protein.LD)
           
         })
