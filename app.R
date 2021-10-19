@@ -1030,13 +1030,19 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                        
                                              ))),
                   #Choose your favourite photoperiod
-                 conditionalPanel(condition = "(input.navigation_bar == 'clusters' && input.gene_sets == 'peak') || input.navigation_bar == 'individual' ",
-                                 selectInput(inputId = "season", label="Choose your favourite photoperiod", 
+                 conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'peak'",
+                                 selectInput(inputId = "season_cluster", label="Choose your favourite photoperiod", 
+                                            
+                                            choices=c("Long days (Summer)" = "LD", 
+                                                      "Short days (Winter)" = "SD")
+                                            )),
+               conditionalPanel(condition = "input.navigation_bar == 'individual' ",
+                                selectInput(inputId = "season", label="Choose your favourite photoperiod", 
                                             
                                             choices=c("Long days (Summer)" = "LD", 
                                                       "Short days (Winter)" = "SD",
                                                       "Both" = "cicle_comparison")
-                                            )),
+                                )),
                
                #Choose your favourite time of the day
                conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'peak'",
@@ -1316,7 +1322,7 @@ server <- shinyServer(function(input, output, session) {
         if (input$gene_sets == "peak")
         {
         file.name <- paste(c("cluster_","peak_",as.character(input$zt), ".txt"), collapse="")
-        path <- paste(c("clusters_",input$season), collapse="")
+        path <- paste(c("clusters_",input$season_cluster), collapse="")
         complete_path<- paste(c(path,file.name),collapse="/")
         target.genes <- read.table(file=complete_path, header=F,as.is = T, comment.char="")
         #target.genes <- read.table(file="clusters_LD/cluster_peak_12.txt", header=F,as.is = T, comment.char="")
@@ -1334,43 +1340,43 @@ server <- shinyServer(function(input, output, session) {
             }else if (input$rhythmic_file == "LDLL")
             {
               target.genes <- read.table(file="cluster_rhythmic/LD_and_LL_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "SDLL")
             {
               target.genes <- read.table(file="cluster_rhythmic/SD_and_LL_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "LDDD")
             {
               target.genes <- read.table(file="cluster_rhythmic/LD_and_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "SDDD")
             {
               target.genes <- read.table(file="cluster_rhythmic/SD_and_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "LDLD")
             {
               target.genes <- read.table(file="cluster_rhythmic/LD_light_activated_dark_repressed.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "SDLD")
             {
               target.genes <- read.table(file="cluster_rhythmic/SD_light_activated_dark_repressed.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "LDDL")
             {
               target.genes <- read.table(file="cluster_rhythmic/LD_light_repressed_dark_activated.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$X
             }else if (input$rhythmic_file == "SDDL")
             {
               target.genes <- read.table(file="cluster_rhythmic/SD_light_repressed_dark_activated.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "noclearLD")
             {
               target.genes <- read.table(file="cluster_rhythmic/LD_no_clear_effect_light_dark_regulation.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "noclearSD")
             {
               target.genes <- read.table(file="cluster_rhythmic/SD_no_clear_effect_light_dark_regulation.tsv",header=T, as.is = T, comment.char = "")
-              target.genes <- target.genes$geneID
+              target.genes <- target.genes$x
             }else if (input$rhythmic_file == "noLD")
             {
               target.genes <- read.table(file="cluster_rhythmic/LD_non_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
@@ -1403,17 +1409,15 @@ server <- shinyServer(function(input, output, session) {
             enrich.go <- enrichGO(gene          = target.genes,
                                   universe      = microalgae.genes,
                                   OrgDb         = org.db,
-                                  ont           = #"MF",
-                                    input$ontology,
+                                  ont           = "MF", #input$ontology,
                                   pAdjustMethod = "BH",
-                                  pvalueCutoff  = #0.05,
-                                    input$pvalue,
+                                  pvalueCutoff  = 0.05, #input$pvalue,
                                   readable      = TRUE,
                                   keyType = "GID")
             
             
             ## Generate ouput table
-            enrich.go.result <- as.data.frame(enrich.go)
+            enrich.go.result <- as.data.frame(enrich.go@result)
             
             if(nrow(enrich.go.result) > 0)
             {
@@ -1472,7 +1476,7 @@ annotated with the GO term represented in the corresponding row."
                 ## Download result
                 output$downloadGOTable<- downloadHandler(
                     filename= function() {
-                        paste("go_enrichment_table_zt",input$zt ,"_",input$season,".tsv", sep="")
+                        paste("go_enrichment_table",".tsv", sep="")
                     },
                     content= function(file) {
                         write.table(x = go.result.table,quote = F,sep = "\t",
@@ -1577,12 +1581,12 @@ with the corresponding GO term. Right click on the image to download it.")
             
             ## Compute KEGG pathway enrichment
                pathway.enrichment <- enrichKEGG(gene = target.genes.kegg, organism = organism.id, keyType = "kegg",
-                                                 universe = gene.universe,qvalueCutoff = 0.05) #input$pvalue)
+                                                 universe = gene.universe,qvalueCutoff = input$pvalue)
             }
             shinyjs::showElement(id = 'ready.enrichment.kegg')
             shinyjs::hideElement(id = 'loading.enrichment.kegg')
             
-            pathway.enrichment.result <- as.data.frame(pathway.enrichment)
+            pathway.enrichment.result <- as.data.frame(pathway.enrichment@result)
             if(nrow(pathway.enrichment.result) > 0)
             {
                 kegg.intro.text <- paste(c("The tabs below present the results from the <b>KEGG pathways/modules enrichment analysis</b> 
