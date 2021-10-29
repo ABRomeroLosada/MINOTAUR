@@ -11,7 +11,7 @@ library(shiny)
 library(shinycssloaders)
 library(shiny)
 #library(clusterProfiler)
-#library(pathview)
+library(pathview)
 #library(ChIPseeker)
 #library(ChIPpeakAnno)
 #library(rtracklayer)
@@ -1627,7 +1627,7 @@ server <- shinyServer(function(input, output, session) {
         
         # Load libraries
         library(clusterProfiler)
-        library(pathview)
+        #library(pathview)
         library(org.Otauri.eg.db)
             
         org.db <- org.Otauri.eg.db
@@ -1725,9 +1725,11 @@ server <- shinyServer(function(input, output, session) {
             enrich.go <- enrichGO(gene          = target.genes,
                                   universe      = microalgae.genes,
                                   OrgDb         = org.db,
-                                  ont           = "MF", #input$ontology,
+                                  ont           = #"MF", 
+                                                 input$ontology,
                                   pAdjustMethod = "BH",
-                                  pvalueCutoff  = 0.05, #input$pvalue,
+                                  pvalueCutoff  = #0.05, 
+                                                 input$pvalue,
                                   readable      = TRUE,
                                   keyType = "GID")
             
@@ -1814,7 +1816,9 @@ annotated with the GO term represented in the corresponding row."
                     height    = 900,
                     res       = 120,
                     expr = {
+                     
                         goplot(enrich.go,showCategory = 10)
+
                     })
                 
                 output$barplot_text <- renderText("In the following barplot each bar represents a significantly enriched 
@@ -1828,7 +1832,7 @@ annotated with the GO term represented in the corresponding row."
                     height    = 600,
                     res       = 120,
                     expr = {
-                        barplot(enrich.go,drop=TRUE,showCategory = 10)
+                        barplot(enrich.go,drop=TRUE)#,showCategory = 10)
                     })
                 
                 output$dotplot_text <- renderText("In the following dotplot each dot represents a significantly enriched 
@@ -1897,7 +1901,7 @@ with the corresponding GO term. Right click on the image to download it.")
             
             ## Compute KEGG pathway enrichment
                pathway.enrichment <- enrichKEGG(gene = target.genes.kegg, organism = organism.id, keyType = "kegg",
-                                                 universe = gene.universe,qvalueCutoff = input$pvalue)
+                                                 universe = gene.universe,qvalueCutoff = 0.05)#input$pvalue)
             }
             shinyjs::showElement(id = 'ready.enrichment.kegg')
             shinyjs::hideElement(id = 'loading.enrichment.kegg')
@@ -2061,7 +2065,7 @@ assocated to the enriched pathway represented in the corresponding row."
                          species = organism.id,
                          limit = list(gene=max(abs(genes.pathway)), cpd=1),
                          gene.idtype ="kegg")
-                
+
                 list(src = paste(c(enriched.pathway.id(),"pathview","png"), collapse="."),
                      contentType="image/png",width=1200,height=900)
             },deleteFile = T)
