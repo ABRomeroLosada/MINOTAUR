@@ -1725,11 +1725,10 @@ server <- shinyServer(function(input, output, session) {
             enrich.go <- enrichGO(gene          = target.genes,
                                   universe      = microalgae.genes,
                                   OrgDb         = org.db,
-                                  ont           = #"MF", 
-                                                 input$ontology,
+                                  ont           = input$ontology,
                                   pAdjustMethod = "BH",
-                                  pvalueCutoff  = #0.05, 
-                                                 input$pvalue,
+                                  pvalueCutoff  = 0.05, 
+                                                 #input$pvalue,
                                   readable      = TRUE,
                                   keyType = "GID")
             
