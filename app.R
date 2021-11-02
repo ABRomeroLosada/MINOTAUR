@@ -20,10 +20,10 @@ library(shinythemes)
 library(shinyjs)
 ## Load microalgae annotation packages
 library(org.Otauri.eg.db) 
-#install.packages(pkgs = "./org.Otauri.eg.db/",repos = NULL,type="source")
+#install.packages(pkgs = "TxDb.Otauri.JGI/",repos = NULL,type="source")
 
 ## Load microalgae genome annotation packages
-# library(TxDb.Otauri.JGI)
+library(TxDb.Otauri.JGI)
 
 ## Auxiliary functions
 ## Auxiliary function to compute enrichments
@@ -705,7 +705,7 @@ plot.ld.dd <- function(gene.id, gene.expression)
   
   expression.step <- floor(range.expression / 5)
   
-  plot(as.numeric(current.gene.expression.ld.ll),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+  plot(as.numeric(current.gene.expression.ld.dd),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
        ylim=c(min.expression-expression.step,max.expression),
        cex.lab=1.3,main=gene.id,cex.main=2)
   axis(side=2,lwd=3)
@@ -791,7 +791,10 @@ plot.ld.sd <- function(gene.id, gene.expression)
        labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
   lines(as.numeric(current.gene.expression.sd),type="o",lwd=3,col="red",
        ylim=c(min.expression-expression.step,max.expression))
-  
+  legend("topright", 
+         legend = c("LD", "SD"), 
+         lwd=2, col = c("blue", "red"), 
+         lty=c(1,1))
   polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/4,
                              min.expression-expression.step/4,
                              min.expression-expression.step/2,
@@ -871,7 +874,10 @@ plot.ld.sd.prot <- function(gene.id, gene.expression.SD, gene.expression.LD)
        labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
   lines(as.numeric(current.gene.expression.sd),type="o",lwd=3,col="red",
         ylim=c(min.expression-expression.step,max.expression))
-  
+  legend("topright", 
+         legend = c("LD", "SD"), 
+         lwd=2, col = c("blue", "red"), 
+         lty=c(1,1))
   polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/4,
                              min.expression-expression.step/4,
                              min.expression-expression.step/2,
@@ -931,6 +937,7 @@ plot.ld.sd.prot <- function(gene.id, gene.expression.SD, gene.expression.LD)
   
 }
 
+
 plot.ld.sd.ll <- function(gene.id, gene.expression)
 {
   ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
@@ -961,7 +968,10 @@ plot.ld.sd.ll <- function(gene.id, gene.expression)
        labels = rep(paste("ZT",seq(from=0,to=20,by=4)),5),las=2,lwd=3)
   lines(as.numeric(current.gene.expression.sd.ll),type="o",lwd=3,col="red",
         ylim=c(min.expression-expression.step,max.expression))
-  
+  legend("topright", 
+         legend = c("LD", "SD"), 
+         lwd=2, col = c("blue", "red"), 
+         lty=c(1,1))
   polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/4,
                              min.expression-expression.step/4,
                              min.expression-expression.step/2,
@@ -1079,7 +1089,10 @@ plot.ld.sd.dd <- function(gene.id, gene.expression)
        labels = rep(paste("ZT",seq(from=0,to=20,by=4)),5),las=2,lwd=3)
   lines(as.numeric(current.gene.expression.sd.dd),type="o",lwd=3,col="red",
         ylim=c(min.expression-expression.step,max.expression))
-  
+  legend("topright", 
+         legend = c("LD", "SD"), 
+         lwd=2, col = c("blue", "red"), 
+         lty=c(1,1))
   polygon(x = c(1,5,5,1),y=c(min.expression-expression.step/4,
                              min.expression-expression.step/4,
                              min.expression-expression.step/2,
@@ -1662,11 +1675,12 @@ server <- shinyServer(function(input, output, session) {
           {
             target.genes <- read.table(file="cluster_rhythmic/LD_LL_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
             target.genes <- target.genes$geneID
+            #head(target.genes)
             }else if (input$rhythmic_file == "SDLLDD")
             {
               target.genes <- read.table(file="cluster_rhythmic/SD_LL_DD_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
               target.genes <- target.genes$geneID
-            }else if (input$rhythmic_file == "LDLL")
+              }else if (input$rhythmic_file == "LDLL")
             {
               target.genes <- read.table(file="cluster_rhythmic/LD_and_LL_rhythmic_genes.tsv",header=T, as.is = T, comment.char = "")
               target.genes <- target.genes$x
@@ -1738,9 +1752,11 @@ server <- shinyServer(function(input, output, session) {
             enrich.go <- enrichGO(gene          = target.genes,
                                   universe      = microalgae.genes,
                                   OrgDb         = org.db,
-                                  ont           = input$ontology,
+                                  ont           = "MF",
+                                    #input$ontology,
                                   pAdjustMethod = "BH",
-                                  pvalueCutoff  = input$pvalue,
+                                  pvalueCutoff  = 0.05,
+                                    #input$pvalue,
                                   readable      = TRUE,
                                   keyType = "GID")
             
@@ -1913,7 +1929,7 @@ with the corresponding GO term. Right click on the image to download it.")
             ## Compute KEGG pathway enrichment
                pathway.enrichment <- enrichKEGG(gene = target.genes.kegg, organism = organism.id, keyType = "kegg",
                                                  universe = gene.universe,qvalueCutoff = 0.05)#input$pvalue)
-            }
+            
             shinyjs::showElement(id = 'ready.enrichment.kegg')
             shinyjs::hideElement(id = 'loading.enrichment.kegg')
             
@@ -2080,7 +2096,8 @@ assocated to the enriched pathway represented in the corresponding row."
                 list(src = paste(c(enriched.pathway.id(),"pathview","png"), collapse="."),
                      contentType="image/png",width=1200,height=900)
             },deleteFile = T)
-        })
+        }) 
+        }
         
     })
    
@@ -2130,7 +2147,7 @@ assocated to the enriched pathway represented in the corresponding row."
   } else if (input$omics == "integration")
   {
     #Extract protein abundance levels of the corresponding target gene
-    #target.prot <- "ostta05g02426"
+    #target.prot <- "ostta07g03440"
     target.prot <- as.character(input$gene)
     #target.prot <-"ostta01g00060"
     swath.normalized.data.SD <- read.table(file = "sd_swath_processed_data.tsv",header=T,sep="\t")
@@ -2140,7 +2157,7 @@ assocated to the enriched pathway represented in the corresponding row."
     swath.normalized.data.LD <- read.table(file = "swath_processed_data.tsv",header=T,sep="\t")
     swath.normalized.data.LD[,"zt20_2"] <- swath.normalized.data.LD[,"zt16_2"]
     swath.normalized.data.LD[,"zt16_2"] <- swath.normalized.data.LD[,"zt20_2"]
-    head(swath.normalized.data.SD)
+  
     zts.omics <- c(paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 1, sep = "_"),
                    paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 2, sep = "_"),
                    paste(paste(paste("zt", seq(from=0, to=20, by=4), sep = ""), sep = "_"), 3, sep = "_"))
@@ -2151,7 +2168,7 @@ assocated to the enriched pathway represented in the corresponding row."
     
     #extract gene expression levels of the target gene.
     selected.gene <- as.character(input$gene)
-    #selected.gene <-"ostta01g00060"
+    #selected.gene <-"ostta07g03440"
     total.gene.expression <- read.table(file = "gene_expression.tsv", header =T)
     gene.expression<- total.gene.expression[selected.gene,]
     
@@ -2894,7 +2911,7 @@ assocated to the enriched pathway represented in the corresponding row."
                                paste("ld_", "zt16_", seq(from=6, to=7), sep=""),
                                paste("ld_", "zt20_", seq(from=2, to=3), sep=""),
                                paste("ld_", "zt20_", seq(from=6, to=7), sep=""))
-    gene.expression.rain.ld.dd <- gene.expression.LD.DD[new.time.points.order]
+    gene.expression.rain.ld.dd <- gene.expression.LD.DD[new.time.points.order.ld.dd]
     
     new.time.points.order.sd.dd <- c(paste("sd_", "zt00_", seq(from=2, to=3), sep=""),
                                      paste("sd_", "zt00_", seq(from=6, to=7), sep=""),
@@ -2960,7 +2977,9 @@ assocated to the enriched pathway represented in the corresponding row."
         height    = 600,
         res       = 120,
         expr = {
-          plot.sd.gene.prot(gene.id=target.prot,gene.expression = total.gene.expression,protein.data = protein.SD)
+          plot.sd.gene.prot(gene.id=target.prot,
+                            gene.expression = total.gene.expression,
+                            protein.data = protein.SD)
           
         })
       #####Circacompare analysis
