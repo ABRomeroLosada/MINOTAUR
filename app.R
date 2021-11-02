@@ -1173,8 +1173,8 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     
     fluidRow(
         column(
-            width = 2,
-            img(src='logo_1.png', align = "center", width=200),
+            width = 4,
+            img(src='logo_2.jpg', align = "center", width=400),
             tags$br(),
             radioButtons(inputId = "navigation_bar", width="100%",selected="home",
                          label="",
@@ -1187,8 +1187,8 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                              "Citation and Contact" = "citation"
                          ))),
         column(
-            width = 8,
-            tags$div(align = "center", 
+            width = 7,
+            tags$div(align = "center", width="100%",
                      tags$h1(tags$b("OsttaCIRC"), tags$br()),
                      tags$h2("microALGAE FUNctional enrichment tool for MicroAlgae RnA-seq and Chip-seq AnalysiS")),
             tags$br(),tags$br(),
@@ -1308,16 +1308,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
             ),
             
         ),
-        column(
-            width = 2,
-            img(src='logo_ibvf.jpg', align = "center", width=100),
-            img(src='logo_us.png', align = "center", width=100),
-            tags$br(),tags$br(),tags$br(),
-            img(src='logo_csic.jpg', align = "center", width=100),
-            tags$br(),tags$br(),
-            tags$div(align="center",width=60,
-                     HTML("<script type=\"text/javascript\" src=\"//rf.revolvermaps.com/0/0/8.js?i=5jamj0c2y0z&amp;m=7&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33\" async=\"async\"></script>"))
-        )
+        
     ),
     
     
@@ -1578,8 +1569,26 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                         plotOutput(outputId = "circacompare",inline=TRUE)),
                                                     tags$br(), tags$br(),
                                                     br(), br())
-                                           ))
-             
+                                           )),
+              tags$br(),tags$br(),tags$br(),
+              tags$br(),tags$br(),tags$br(),
+              tags$br(),tags$br(),tags$br(),
+              tags$br(),tags$br(),tags$br(),
+              tags$br(),tags$br(),tags$br(),
+              tags$br(),tags$br(),tags$br(),
+              
+              img(src='logo_ibvf.jpg', align = "center", width=100), 
+              img(src='logo_us.png', align = "center", width=100),
+              img(src='logo_csic.jpg', align = "center", width=100),
+              tags$br(),tags$br(),tags$br(),
+              
+              tags$div(align="justify", tags$b("Hey user!")),
+              tags$div(align="justify","Hope you are enjoying this app. Any question or suggestion can be addressed to arlosada@us.es", 
+                       tags$b("Thank you!")),
+              tags$br(),tags$br(),tags$br(),
+              tags$br(),tags$br(),tags$br(),
+              tags$br(),tags$br(),tags$br()
+                       
                                                     
 )))
 
