@@ -1190,19 +1190,23 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
             width = 7,
             tags$div(align = "center", width="100%",
                      tags$h1(tags$b("OsttaCIRC"), tags$br()),
-                     tags$h2("microALGAE FUNctional enrichment tool for MicroAlgae RnA-seq and Chip-seq AnalysiS")),
+                     tags$h2("Ostreococcus tauri circadian profiles exploration app")),
             tags$br(),tags$br(),
             conditionalPanel(condition = "input.navigation_bar == 'home'",
-                             tags$div(align = "justify", "Welcome to", tags$b("ALGAEFUN")," with ", tags$b("MARACAS"), "a microalgae web based tool for the analysis of ", 
-                                      tags$b("RNA-seq"), "and ", tags$b("ChIP-seq"), "data and the", tags$b("functional annotation"), "of the resulting gene sets and genomic loci. ",
-                                      tags$b("ALGAEFUN"), "with ", tags$b("MARACAS"), "supports the analysis for a wide collection 
-               of microalgae that includes", tags$i("Chlamydomonas reinhardtii, Ostreococcus tauri, Phaeodactylum tricornutum"), "and ", 
-                                      tags$i("Nannochlorpsis gaditana."), "Please select from the navigation bar on the left the type of analysis you want to perform. You can also 
-               see our", tags$b("video tutorials"), "on how to analyse RNA-seq and
-               ChIP-seq data as well as on how to functionally annotate gene sets and genomic loci. Our
-               code is freely available at", tags$b("Github."), "Please cite our work if you find it useful in your research."),
+                             tags$div(align = "justify", "Welcome to", tags$b("OsttaCIRC."), "In the past years working with", tags$b( "microalgae,"), 
+                                      "we've observed that there is a lack of easy-to-use tools to analyse and explore omic data in comparison to other
+                                      organisms. This issue decelerates the progress of the microalgae research community."),
                              
-                             tags$div(align = "justify", "Below you can find the phylogenetic relationship between the different microalgae species supported in ALGAEFUN with MARACAS: "),
+                             tags$div(align = "justify","However, in the spirit of open science, that situation motivated us to develop different online 
+                                      tools to analyse omic data", tags$b("AlgaeFUN with MARACAS"), "and to explore the published data generated in our lab",
+                                      tags$b("osttaCIRC.")),
+                             tags$div(align = "justify","We know that computational analysis are a tough task for a lot of researchers, so sometimes it is not 
+                                      enough to make our data public. At that point, we had the idea of developing ", tags$b("osttaCIRC"), ", an online app that would help researchers 
+                                      interested in our work to explore our data and to answer simple questions without executing the whole analysis from the published data."),
+                             tags$div(align="justify", tags$b("OsttaCIRC"), "includes RNA-seq and proteomic data from", tags$i("Ostreococcus tauri"), ",generated under short day and long day conditions."),
+                            tags$div(align="justify", "Please select from the navigation bar on the left the type of analysis you want to perform. You can also see our video tutorial."), 
+                           tags$div(align="justify", "Our code is freely available at", tags$b("Github."), "Please cite our work if you find it useful in your research."),
+                             tags$div(align="justify", "Here are some examples of the different functions included in this tool:"), 
                              tags$br(),tags$br(),
                              # 
                              tags$div(align ="center",img(src='phylogeny.png', align = "center", width=600))
@@ -2974,13 +2978,13 @@ assocated to the enriched pathway represented in the corresponding row."
                               col_group = "group", 
                               col_outcome = "measure",
                               alpha_threshold = 1)
-      circacompare.SD.LD[,2] <- result.i[[2]][,2]
-      colnames(circacompare.SD.LD) <- c("","")
-      rownames(circacompare.SD.LD) <- result.i[[2]][,1]
-      circacompare.SD.LD[,1] <- result.i[[2]][,1]
+      circacompare.gene.prot[,2] <- result.i[[2]][,2]
+      colnames(circacompare.gene.prot) <- c("","")
+      rownames(circacompare.gene.prot) <- result.i[[2]][,1]
+      circacompare.gene.prot[,1] <- result.i[[2]][,1]
       
       output$output_statistical_table <- renderDataTable({
-        circacompare.SD.LD 
+        circacompare.gene.prot 
       },escape=FALSE,options =list(pageLength = 15))
       
       output$circacompare<- renderPlot(
@@ -3017,13 +3021,13 @@ assocated to the enriched pathway represented in the corresponding row."
                               col_group = "group", 
                               col_outcome = "measure",
                               alpha_threshold = 1)
-      circacompare.SD.LD[,2] <- result.i[[2]][,2]
-      colnames(circacompare.SD.LD) <- c("","")
-      rownames(circacompare.SD.LD) <- result.i[[2]][,1]
-      circacompare.SD.LD[,1] <- result.i[[2]][,1]
+      circacompare.gene.prot[,2] <- result.i[[2]][,2]
+      colnames(circacompare.gene.prot) <- c("","")
+      rownames(circacompare.gene.prot) <- result.i[[2]][,1]
+      circacompare.gene.prot[,1] <- result.i[[2]][,1]
       
       output$output_statistical_table <- renderDataTable({
-        circacompare.SD.LD 
+        circacompare.gene.prot 
       },escape=FALSE,options =list(pageLength = 15))
       
       output$circacompare<- renderPlot(
