@@ -201,7 +201,7 @@ plot.sd.prot <- function(gene.id, gene.expression)
   
   expression.step <- floor(range.expression / 5)
   
-  plot(as.numeric(current.gene.expression.sd[1,]),type="o",lwd=3,col="red",axes=F,xlab="",ylab="FPKM",
+  plot(as.numeric(current.gene.expression.sd[1,]),type="o",lwd=3,col="red",axes=F,xlab="",ylab="Abundance",
        ylim=c(min.expression-expression.step,max.expression),
        cex.lab=1.3,main=gene.id,cex.main=2)
   axis(side=2,lwd=3)
@@ -514,7 +514,7 @@ plot.ld.prot <- function(gene.id, gene.expression)
   
   expression.step <- floor(range.expression / 5)
   
-  plot(as.numeric(current.gene.expression.ld),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+  plot(as.numeric(current.gene.expression.ld),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="Abundance",
        ylim=c(min.expression-expression.step,max.expression),
        cex.lab=1.3,main=gene.id,cex.main=2)
   axis(side=2,lwd=3)
@@ -863,7 +863,7 @@ plot.ld.sd.prot <- function(gene.id, gene.expression.SD, gene.expression.LD)
   
   expression.step <- floor(range.expression / 5)
   
-  plot(as.numeric(current.gene.expression.ld),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="FPKM",
+  plot(as.numeric(current.gene.expression.ld),type="o",lwd=3,col="blue",axes=F,xlab="",ylab="Abundance",
        ylim=c(min.expression-expression.step,max.expression),
        cex.lab=1.3,main=gene.id,cex.main=2)
   axis(side=2,lwd=3)
@@ -1180,9 +1180,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                          label="",
                          choices=c(
                              "Home" = "home",
-                             "Cluster Functional Analysis" = "clusters",
                              "Individual Gene Exploration" = "individual",
-                            "Tutorials" = "tutorials",
+                             "Cluster Functional Analysis" = "clusters",
+                             "Tutorials" = "tutorials",
                              "GitHub repository" = "github",
                              "Citation and Contact" = "citation"
                          ))),
@@ -1727,8 +1727,7 @@ server <- shinyServer(function(input, output, session) {
                                   OrgDb         = org.db,
                                   ont           = input$ontology,
                                   pAdjustMethod = "BH",
-                                  pvalueCutoff  = 0.05, 
-                                                 #input$pvalue,
+                                  pvalueCutoff  = input$pvalue,
                                   readable      = TRUE,
                                   keyType = "GID")
             
