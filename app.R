@@ -1202,21 +1202,21 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
         column(
             width = 7,
             tags$div(align = "center", width="100%",
-                     tags$h1(tags$b("OsttaCIRC"), tags$br()),
-                     tags$h2("Ostreococcus tauri circadian profiles exploration app")),
+                     tags$h1(tags$b("MINOTAUR"), tags$br()),
+                     tags$h2("Multi-omics Integration in Ostreococcus tauri ")),
             tags$br(),tags$br(),
             conditionalPanel(condition = "input.navigation_bar == 'home'",
-                             tags$div(align = "justify", "Welcome to", tags$b("OsttaCIRC."), "In the past years working with", tags$b( "microalgae,"), 
+                             tags$div(align = "justify", "Welcome to", tags$b("MINOTAUR."), "In the past years working with", tags$b( "microalgae,"), 
                                       "we've observed that there is a lack of easy-to-use tools to analyse and explore omic data in comparison to other
                                       organisms. This issue decelerates the progress of the microalgae research community."),
                              
                              tags$div(align = "justify","However, in the spirit of open science, that situation motivated us to develop different online 
                                       tools to analyse omic data", tags$b("AlgaeFUN with MARACAS"), "and to explore the published data generated in our lab",
-                                      tags$b("osttaCIRC.")),
+                                      tags$b("MINOTAUR.")),
                              tags$div(align = "justify","We know that computational analysis are a tough task for a lot of researchers, so sometimes it is not 
-                                      enough to make our data public. At that point, we had the idea of developing ", tags$b("osttaCIRC"), ", an online app that would help researchers 
+                                      enough to make our data public. At that point, we had the idea of developing ", tags$b("MINOTAUR"), ", an online app that would help researchers 
                                       interested in our work to explore our data and to answer simple questions without executing the whole analysis from the published data."),
-                             tags$div(align="justify", tags$b("OsttaCIRC"), "includes RNA-seq and proteomic data from", tags$i("Ostreococcus tauri"), ",generated under short day and long day conditions."),
+                             tags$div(align="justify", tags$b("MINOTAUR"), "includes RNA-seq and proteomic data from", tags$i("Ostreococcus tauri"), ",generated under short day and long day conditions."),
                             tags$div(align="justify", "Please select from the navigation bar on the left the type of analysis you want to perform. You can also see our video tutorial."), 
                            tags$div(align="justify", "Our code is freely available at", tags$b("Github."), "Please cite our work if you find it useful in your research."),
                              tags$div(align="justify", "Here are some examples of the different functions included in this tool:"), 
@@ -1226,19 +1226,14 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
             ),
             
             conditionalPanel(condition = "input.navigation_bar == 'clusters'",
-                             tags$div(align="justify", tags$b("AlgaeFUN"), "allows researchers to perform", tags$b("functional annotation"), 
+                             tags$div(align="justify", tags$b("MINOTAUR"), "allows researchers to perform", tags$b("functional annotation"), 
                                       "over gene sets.", tags$b("Gene Ontology (GO) enrichment"), "analysis as well as", tags$b("KEGG (Kyoto Encyclopedia
-                       of Genes and Genomes) pathway enrichment"), "analysis are supported. The gene set of interest can be obtained, for example,
-                       as the result of a differential expression analysis carried out using", tags$b("MARACAS."), " See our", tags$b("video tutorial"),
+                       of Genes and Genomes) pathway enrichment"), "analysis are supported. MINOTAURO offers several gene sets generated in our lab, 
+                                      such as rythmic genes sets or sets of genes that peak at a certain time of the day.", " See our", tags$b("video tutorial"),
                                       "for details or follow the next steps to perform your analysis:",
                                       tags$ol(
-                                          tags$li("In the left panel choose your ", tags$b("microalgae")," of interest, the type of enrichment analysis 
-                                          to perform and the", tags$b("p-value threshold.")),
-                                          tags$li("Insert your ", tags$b("gene set"), " in the text box or load it from a file using the",
-                                                  tags$b("Browse …"), " button. An example can be loaded by clicking on the ",  tags$b("Example"), " button. 
-                                          Click on", tags$b("Clear"), " button to remove the loaded gene set."),
-                                          tags$li("Users can choose between the default", tags$b("background"), " gene provided by AlgaeFUN of a custom one 
-                                          that can be specified."),
+                                          tags$li("In the right panel choose the type of enrichment analysis to perform and the", tags$b("p-value threshold.")),
+                                          tags$li("In the right panel, choose your", tags$b("gene set"), "of interest.",
                                           tags$li("Click on the ", tags$b("Have Fun"), " button to perform the specified functional enrichment analysis. The
                                           results will be shown in the different tabs below.")
                                       )
