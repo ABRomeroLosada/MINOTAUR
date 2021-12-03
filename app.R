@@ -1233,7 +1233,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                       "for details or follow the next steps to perform your analysis:",
                                       tags$ol(
                                           tags$li("In the right panel choose the type of enrichment analysis to perform and the", tags$b("p-value threshold.")),
-                                          tags$li("In the right panel, choose your", tags$b("gene set"), "of interest.",
+                                          tags$li("In the right panel, choose your", tags$b("gene set"), "of interest."),
                                           tags$li("Click on the ", tags$b("Have Fun"), " button to perform the specified functional enrichment analysis. The
                                           results will be shown in the different tabs below.")
                                       )
@@ -1246,18 +1246,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                              execute" , tags$b("statistical analysis"),  "over their waves.", " See our", tags$b("video tutorial"),
                                       "for details or follow the next steps to perform your analysis:",
                                       tags$ol(
-                                          tags$li("In the left panel choose your ", tags$b("microalgae")," of interest, the gene", 
-                                                  tags$b("promoter length"), "and the",  tags$b("gene parts"), "that will be considered
-                                          when determining the marked genes."),
-                                          tags$li("Insert in the text box your ", tags$b("set of genomic regions"), " as a table consisting 
-                                          of three tab-separated columns representing the chromosome, the start and end position of 
-                                          the regions. An example can be loaded by clicking on the ",  tags$b("Example"), " button. 
-                                          Click on", tags$b("Clear"), " button to remove the loaded gene set. Alternatively, using the",
-                                                  tags$b("Browse..."), "button, the genomic regions can be uploaded from a file in BED format as 
-                                          described previously containing as least three columns. This file can be obained using our tool", 
-                                                  tags$b("MARACAS.")),
-                                          tags$li("Optionally, users can upload the genome wide signal level of a epigenetic mark or transcription 
-                                          factor binding in a BigWig file. This file can be obained using our tool", tags$b("MARACAS.")),
+                                          tags$li("In the left panel choose your favourite", tags$b("omic"),"analysis and your favourite gene."),
+                                          tags$li("In the right panel choose your", tags$b("photoperiod"), "of interest and decide if you want to combine it
+                                          with some other light conditions."),
                                           tags$li("Click on the ", tags$b("Have Fun"), " button to perform the specified analysis. The
                                           results will be shown in the different tabs below.")
                                       )
