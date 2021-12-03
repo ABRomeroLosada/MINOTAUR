@@ -1256,46 +1256,33 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
             
 
             conditionalPanel(condition = "input.navigation_bar == 'github'",
-                             tags$div(align = "justify", tags$b("AlgaeFUN,"), "is entirely developed using 
+                             tags$div(align = "justify", tags$b("MINOTAUR,"), "is entirely developed using 
         the R package", tags$b( tags$a(href="https://shiny.rstudio.com/", "shiny.")), "The 
-        source code is released under", tags$b("GNU General Public License v3.0"), "and is hosted at",
-                                      tags$b("GitHub."), "If you experience any problem using AlgaeFUN please create an", 
-                                      tags$b(tags$a(href="https://github.com/fran-romero-campero/AlgaeFUN/issues","issue")), 
-                                      "in GitHub and we will address it."),
-                             tags$div(align="center",tags$h1(tags$b(tags$a(href="https://github.com/fran-romero-campero/AlgaeFUN",
-                                                                           "AlgaeFUN at GitHub")))),
-                             tags$br(),
-                             tags$br(),
-                             
-                             tags$div(align = "justify", tags$b("MARACAS,"), "is developed using bash scripting and several 
-        bioconductor R packages. The source code is released under", tags$b("GNU General Public License v3.0"), "and is hosted at",
-                                      tags$b("GitHub."), "If you experience any problem using AlgaeFUN please create an", 
-                                      tags$b(tags$a(href="https://github.com/fran-romero-campero/MARACAS/issues","issue")), 
-                                      "in GitHub and we will address it."),
-                             tags$div(align="center",tags$h1(tags$b(tags$a(href="https://github.com/fran-romero-campero/MARACAS",
-                                                                           "MARACAS at GitHub")))),
-            ),
+        source code is hosted at", tags$b("GitHub."), 
+                             tags$div(align="center",tags$h1(tags$b(tags$a(href="https://github.com/ABRomeroLosada/MINOTAUR",
+                                                                           "MINOTAUR at GitHub")))),
+                              ),
             
-            conditionalPanel(condition = "input.navigation_bar == 'citation'",
-                             tags$div(align = "justify", "We are strongly committed to", tags$b("open access software"), 
-                                      "and", tags$b("open science."),"Following our philosophy we have deposited our GitHub code 
-                       into", tags$a(href="https://zenodo.org/record/4754516#.YJxLPSaxUws", target="_blank",tags$b("Zenodo")), ", a
-                       general-purpose open-access repository developed under the", 
-                                      tags$a(href="https://www.openaire.eu/", target="_blank", tags$b("European OpenAIRE program.")), "Meanwhile we publish 
-                       our work in a journal if you find", tags$b("AlgaeFUN with MARACAS"), "useful in your research we would be most grateful if you cite 
-                       our GitHub repository with a,", tags$b("DOI"),  "as follows:",
-                                      tags$br(),
-                                      tags$br(),
-                                      tags$div(tags$b("Romero-Losada, A.B., Arvanitidou, C., de los Reyes, P., 
-                                García-González, M., Romero-Campero, F.J. (2021) AlgaeFUN with MARACAS, microAlgae FUNctional 
-                                enrichment tool for MicroAlgae RnA-seq and Chip-seq AnalysiS v1.0, Zenodo, doi:10.5381/zenodo.4754516 doi:10.5381/zenodo.4752818"))),
-                             
-                             tags$br(),
-                             tags$br(),
+            # conditionalPanel(condition = "input.navigation_bar == 'citation'",
+            #                  tags$div(align = "justify", "We are strongly committed to", tags$b("open access software"), 
+            #                           "and", tags$b("open science."),"Following our philosophy we have deposited our GitHub code 
+            #            into", tags$a(href="https://zenodo.org/record/4754516#.YJxLPSaxUws", target="_blank",tags$b("Zenodo")), ", a
+            #            general-purpose open-access repository developed under the", 
+            #                           tags$a(href="https://www.openaire.eu/", target="_blank", tags$b("European OpenAIRE program.")), "Meanwhile we publish 
+            #            our work in a journal if you find", tags$b("AlgaeFUN with MARACAS"), "useful in your research we would be most grateful if you cite 
+            #            our GitHub repository with a,", tags$b("DOI"),  "as follows:",
+            #                           tags$br(),
+            #                           tags$br(),
+            #                           tags$div(tags$b("Romero-Losada, A.B., Arvanitidou, C., de los Reyes, P., 
+            #                     García-González, M., Romero-Campero, F.J. (2021) AlgaeFUN with MARACAS, microAlgae FUNctional 
+            #                     enrichment tool for MicroAlgae RnA-seq and Chip-seq AnalysiS v1.0, Zenodo, doi:10.5381/zenodo.4754516 doi:10.5381/zenodo.4752818"))),
+            #                  
+            #                  tags$br(),
+                            # tags$br(),
                              #tags$div(align="center", img(src='smiley.png', align = "center", width=200,hight=200)),
-                             tags$br()
+                            # tags$br()
                              
-            ),
+           # ),
             
             conditionalPanel(condition = "input.navigation_bar == 'tutorials'",
                              tags$div(align="center",uiOutput("video_tutorial")),
@@ -1303,7 +1290,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                       tags$br(),
                                       tags$br(),
                                       tags$div(tags$h4(tags$b("Above you can find a video tutorial on how to use the different tools implemented 
-                                in AlgaeFUN with MARACAS."))))
+                                in MINOTAUR."))))
                              
             ),
             
