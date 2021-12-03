@@ -1240,13 +1240,10 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                              )),
             
             conditionalPanel(condition = "input.navigation_bar == 'individual'",
-                             tags$div(align="justify", tags$b("AlgaeFUN"), "allows researchers to perform", tags$b("annotation analysis 
-                                of genomic loci or regions."), "These are typically generated from", tags$b("ChIP-seq"), "studies 
-                                of the genome-wide distribution of", tags$b("epigenetic marks or transcription factor binding sites."),
-                                      "Our tool", tags$b("MARACAS"), "can be used to perform this type of analysis. The set of marked genes 
-                                can be obtained as well as the distribution of the genomic loci overlapping specific genes parts. Also, individual marked genes 
-                                and the average signal level around the TSS (Transcription Start Site) and TES (Transcription
-                                End Site) over the complete set of marked genes can be visualized.", " See our", tags$b("video tutorial"),
+                             tags$div(align="justify", tags$b("MINOTAUR"), "allows researchers to explore individual genes and proteins", 
+                             tags$b("rythmic profiles."), "This data has been generated in our lab under", tags$b("short day and long day"), 
+                             "conditions. In this app, the user can visualize the rythmic profile of their gene or protein of interest, compare their pattern under short day and long day conditions and 
+                             execute" , tags$b("statistical analysis"),  "over their waves.", " See our", tags$b("video tutorial"),
                                       "for details or follow the next steps to perform your analysis:",
                                       tags$ol(
                                           tags$li("In the left panel choose your ", tags$b("microalgae")," of interest, the gene", 
