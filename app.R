@@ -1186,8 +1186,8 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     
     fluidRow(
         column(
-            width = 4,
-            img(src='logo_2.jpg', align = "center", width=400),
+            width = 3,
+            img(src='logo_minotaur.png', align = "center", width=300),
             tags$br(),
             radioButtons(inputId = "navigation_bar", width="100%",selected="home",
                          label="",
@@ -1222,7 +1222,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                              tags$div(align="justify", "Here are some examples of the different functions included in this tool:"), 
                              tags$br(),tags$br(),
                              # 
-                             tags$div(align ="center",img(src='phylogeny.png', align = "center", width=600))
+                             tags$div(align ="center",img(src='ejemplo_intro.png', align = "center", width=800))
             ),
             
             conditionalPanel(condition = "input.navigation_bar == 'clusters'",
@@ -1241,7 +1241,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
             
             conditionalPanel(condition = "input.navigation_bar == 'individual'",
                              tags$div(align="justify", tags$b("MINOTAUR"), "allows researchers to explore individual genes and proteins", 
-                             tags$b("rythmic profiles."), "This data has been generated in our lab under", tags$b("short day and long day"), 
+                             tags$b("rythmic profiles"), " in",tags$i("Ostreococcus tauri."),"This data has been generated in our lab under", tags$b("short day and long day"), 
                              "conditions. In this app, the user can visualize the rythmic profile of their gene or protein of interest, compare their pattern under short day and long day conditions and 
                              execute" , tags$b("statistical analysis"),  "over their waves.", " See our", tags$b("video tutorial"),
                                       "for details or follow the next steps to perform your analysis:",
@@ -1261,7 +1261,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
         source code is hosted at", tags$b("GitHub."), 
                              tags$div(align="center",tags$h1(tags$b(tags$a(href="https://github.com/ABRomeroLosada/MINOTAUR",
                                                                            "MINOTAUR at GitHub")))),
-                              ),
+                              )),
             
             # conditionalPanel(condition = "input.navigation_bar == 'citation'",
             #                  tags$div(align = "justify", "We are strongly committed to", tags$b("open access software"), 
@@ -1368,7 +1368,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                conditionalPanel(condition = "input.navigation_bar == 'individual'",
                                 textInput(inputId= "gene",
                                           label= "Choose your favourite gene",
-                                          value = "",
+                                          value = "ostta07g03440",
                                           placeholder = "ostta07g03440"))
                ),
         column(width = 4,
