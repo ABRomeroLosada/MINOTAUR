@@ -56,7 +56,6 @@ ostta.gene.link <- function(gene.name)
     return(gene.link)
 }
 
-
 ## Gene Ontology term link
 # http://amigo.geneontology.org/amigo/term/GO:0015979
 go.link <- function(go.term)
@@ -109,7 +108,6 @@ enzyme.link <- function(ec.term)
     return(complete.link)
 }
 
-
 ## KEGG pathway link
 ## https://www.genome.jp/kegg-bin/show_pathway?cre04136
 kegg.pathway.link <- function(kegg.pathway)
@@ -135,7 +133,6 @@ kegg.module.link <- function(kegg.module)
                            collapse = "")
     return(complete.link)
 }
-
 
 ####SD plot
 plot.sd <- function(gene.id, gene.expression)
@@ -261,12 +258,12 @@ plot.sd.gene.prot <- function(gene.id, gene.expression, protein.data)
   expression.step <- floor(range.expression / 5)
   
   plot(as.numeric(current.protein.sd),type="o",lwd=3,col="salmon",axes=F,xlab="",ylab="Abundance",
-       ylim=c(0,max.expression),
+       ylim=c(0,max.expression),xlim=c(0,21),
        cex.lab=1.3,main=gene.id,cex.main=2)
   axis(side=2,lwd=3)
   axis(side = 1,pos =-0.1, at = seq(from=1,to=18),
        labels = rep(paste("ZT",seq(from=0,to=20,by=4)),3),las=2,lwd=3)
-  lines(as.numeric(current.gene.expression.sd),type="o",lwd=3,col="red",
+  lines(as.numeric(current.gene.expression.sd),type="o",lwd=3,col="red3",
         ylim=c(min.expression-expression.step,max.expression))
   legend("topright", 
          legend = c("protein", "gene"), 
@@ -572,7 +569,7 @@ plot.ld.gene.prot <- function(gene.id, gene.expression, protein.data)
   expression.step <- floor(range.expression / 5)
   
   plot(as.numeric(current.protein.ld),type="o",lwd=3,col="lightblue",axes=F,xlab="",ylab="Abundance",
-       ylim=c(0,max.expression),
+       ylim=c(0,max.expression),xlim=c(0,21),
        cex.lab=1.3,main=gene.id,cex.main=2)
   axis(side=2,lwd=3)
   axis(side = 1,pos = -0.1, at = seq(from=1,to=18),
@@ -937,7 +934,6 @@ plot.ld.sd.prot <- function(gene.id, gene.expression.SD, gene.expression.LD)
   
 }
 
-
 plot.ld.sd.ll <- function(gene.id, gene.expression)
 {
   ld.zt <- paste("ld",paste0("zt",sprintf(fmt = "%02d",seq(from=0,to=20,by=4))),sep="_")
@@ -1180,14 +1176,20 @@ plot.ld.sd.dd <- function(gene.id, gene.expression)
   
 }
 
+## Load annotation
+ostta.annotation <- read.table(file="ostreococcus_tauri_proteome_annotation.csv",
+                               sep="\t",comment.char = "",
+                               header=F,
+                               as.is=T)[[1]]
+
 # Define UI
 ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
     theme = shinytheme("flatly"),
     
     fluidRow(
         column(
-            width = 3,
-            img(src='logo_minotaur.png', align = "center", width=300),
+            width = 2,
+            img(src='logo_minotaur.png', align = "center", width=200),
             tags$br(),
             radioButtons(inputId = "navigation_bar", width="100%",selected="home",
                          label="",
@@ -1200,26 +1202,29 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                              "Citation and Contact" = "citation"
                          ))),
         column(
-            width = 7,
+            width = 8,
             tags$div(align = "center", width="100%",
                      tags$h1(tags$b("MINOTAUR"), tags$br()),
-                     tags$h2("Multi-omics Integration in Ostreococcus tauri ")),
+                     tags$h2(tags$b("Multi-omics INtegration in", tags$i("Ostreococcus TAURi")))),
             tags$br(),tags$br(),
             conditionalPanel(condition = "input.navigation_bar == 'home'",
-                             tags$div(align = "justify", "Welcome to", tags$b("MINOTAUR."), "In the past years working with", tags$b( "microalgae,"), 
-                                      "we've observed that there is a lack of easy-to-use tools to analyse and explore omic data in comparison to other
-                                      organisms. This issue decelerates the progress of the microalgae research community."),
-                             
-                             tags$div(align = "justify","However, in the spirit of open science, that situation motivated us to develop different online 
-                                      tools to analyse omic data", tags$b("AlgaeFUN with MARACAS"), "and to explore the published data generated in our lab",
-                                      tags$b("MINOTAUR.")),
-                             tags$div(align = "justify","We know that computational analysis are a tough task for a lot of researchers, so sometimes it is not 
-                                      enough to make our data public. At that point, we had the idea of developing ", tags$b("MINOTAUR"), ", an online app that would help researchers 
-                                      interested in our work to explore our data and to answer simple questions without executing the whole analysis from the published data."),
-                             tags$div(align="justify", tags$b("MINOTAUR"), "includes RNA-seq and proteomic data from", tags$i("Ostreococcus tauri"), ",generated under short day and long day conditions."),
-                            tags$div(align="justify", "Please select from the navigation bar on the left the type of analysis you want to perform. You can also see our video tutorial."), 
-                           tags$div(align="justify", "Our code is freely available at", tags$b("Github."), "Please cite our work if you find it useful in your research."),
-                             tags$div(align="justify", "Here are some examples of the different functions included in this tool:"), 
+                             tags$div(align = "justify", tags$b("Welcome to MINOTAUR!!"), "Although doing research in ", tags$b( "microalgae"), 
+                                      "is amazing, we have noticed a lack of easy-to-use tools to analyse and explore omic data. This 
+                                      is restricting progress in the microalgae research community. Following Open Science philosophy, 
+                                      we have developed different online tools to analyse omic data in microalgae such as", 
+                                      tags$a(href="https://greennetwork.us.es/AlgaeFUN/",target="blank",tags$b("AlgaeFUN with MARACAS")), 
+                                      "and to explore the omic data generated in our lab such as the current tool", tags$b("MINOTAUR.")),
+                             tags$div(align = "justify","Computational analysis for omic data can have a steep learning curve. Therefore 
+                             making only raw data available is not enough to ensure accesibility to our results by other independent researchers.
+                             To fill this need we have developed ", tags$b("MINOTAUR (Multiomics Integration in Ostreococcus tauri)"), ", 
+                             an online app for the exploration of the results of our RNA-seq transcriptomic and SWATH proteomic data generated under
+                                      diurnal and seasonal cycles including constant light and constant dark as free running conditions."),
+                             tags$div(align="justify", "Please select from the navigation bar on the left the type of analysis you want to perform. 
+                                      You can also see our ", tags$b("video tutorial"),". Our code is freely available at", 
+                                      tags$a(href="https://github.com/ABRomeroLosada/MINOTAUR", target="blank",tags$b("Github.")), 
+                                      "Please cite our work if you find it useful in your research."),
+                             tags$div(align="justify", "Below you can find examples of the different graphs that can be generated with MINOTAUR
+                                      to explore our results:"), 
                              tags$br(),tags$br(),
                              # 
                              tags$div(align ="center",img(src='ejemplo_intro.png', align = "center", width=800))
@@ -1240,15 +1245,21 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                              )),
             
             conditionalPanel(condition = "input.navigation_bar == 'individual'",
-                             tags$div(align="justify", tags$b("MINOTAUR"), "allows researchers to explore individual genes and proteins", 
-                             tags$b("rythmic profiles"), " in",tags$i("Ostreococcus tauri."),"This data has been generated in our lab under", tags$b("short day and long day"), 
-                             "conditions. In this app, the user can visualize the rythmic profile of their gene or protein of interest, compare their pattern under short day and long day conditions and 
-                             execute" , tags$b("statistical analysis"),  "over their waves.", " See our", tags$b("video tutorial"),
+                             tags$div(align="justify", tags$b("MINOTAUR"), "allows researchers to explore the expression/abundance profiles of 
+                                      individual genes/proteins in",tags$b(tags$i("Ostreococcus tauri")), " and analyse their rhythmicity. 
+                                      This data has been generated in our lab over three complete diurnal cycles under", 
+                                      tags$b("long day (summer day, 16h light / 8h dark) and short day (winter day, 8h light / 16h dark)"), 
+                             "conditions. ", tags$b("Free running conditions"), "consisting of two days under ",
+                             tags$b("constant light (LL) and constant dark (DD)"), "are
+                             also included. In this app, users can visualize gene expression and/or protein abundance profiles of their
+                             interest, compare their patterns under short day, long day conditions and free running conditions. Users can also
+                             perform" , tags$b("statistical analysis"),  "over the rhythmicity of gene/protein expression/abundance profiles.", " See our", tags$b("video tutorial"),
                                       "for details or follow the next steps to perform your analysis:",
                                       tags$ol(
-                                          tags$li("In the left panel choose your favourite", tags$b("omic"),"analysis and your favourite gene."),
-                                          tags$li("In the right panel choose your", tags$b("photoperiod"), "of interest and decide if you want to combine it
-                                          with some other light conditions."),
+                                          tags$li("In the left panel below choose your favourite", tags$b("omic data"),"analysis and enter your favourite", 
+                                                  tags$b("gene/protein ID.")),
+                                          tags$li("In the right panel below choose your", tags$b("photoperiod"), 
+                                          "of interest and decide if you want to combine it with some ", tags$b("free running conditions.")),
                                           tags$li("Click on the ", tags$b("Have Fun"), " button to perform the specified analysis. The
                                           results will be shown in the different tabs below.")
                                       )
@@ -1295,7 +1306,16 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
             ),
             
         ),
-        
+        column(
+          width = 2,
+          img(src='logo_ibvf.jpg', align = "center", width=100),
+          img(src='logo_us.png', align = "center", width=100),
+          tags$br(),tags$br(),tags$br(),
+          img(src='logo_csic.jpg', align = "center", width=100),
+          tags$br(),tags$br(),
+          tags$div(align="center",width=60,
+                   HTML("<script type=\"text/javascript\" src=\"//rf.revolvermaps.com/0/0/8.js?i=5jamj0c2y0z&amp;m=7&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33\" async=\"async\"></script>"))
+        )
     ),
     
     
@@ -1317,14 +1337,14 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                  conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'peak'",
                                  selectInput(inputId = "season_cluster", label="Choose your favourite photoperiod", 
                                             
-                                            choices=c("Long days (Summer)" = "LD", 
-                                                      "Short days (Winter)" = "SD")
+                                            choices=c("Long Days (Summer, 16h light / 8h dark)" = "LD", 
+                                                      "Short Days (Winter, 8h light / 16h dark)" = "SD")
                                             )),
                #Transcriptome or proteome?
                conditionalPanel(condition = "input.navigation_bar == 'individual' ",    
                                 #Choose the kind of analysis that you are interested in
                                 radioButtons(inputId = "omics",
-                                             label="Are you interested in proteomics or transcriptomics?",
+                                             label="Are you interested in transcriptomics and/or proteomics?",
                                              choices=c("Transcriptomics rules!" = "rna",
                                                        "Proteomics nerd" = "prot",
                                                        "Multi-omics integration for the win!" = "integration"
@@ -1333,7 +1353,8 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                
                #Choose your favourite time of the day
                conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'peak'",
-                                selectInput(inputId = "zt", label="Choose your favourite time of the day", 
+                                selectInput(inputId = "zt", label="Choose your favourite time point of the day where ZTN denotes the moment N hours after
+                                            dawn or the beginning of the light period", 
                                             
                                             choices=c("Sunrise(ZT0)" = "0", 
                                                       "ZT4" = "4",
@@ -1343,7 +1364,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                                       "ZT20" = "20"
                                                        ))),
                conditionalPanel(condition = "input.navigation_bar == 'clusters' && input.gene_sets == 'ritmo'",
-                                selectInput(inputId = "rhythmic_file", label="Choose your favourite rhythmic pattern", 
+                                selectInput(inputId = "rhythmic_file", label="Choose your favourite rhythmic gene set", 
                                             
                                             choices=c("Rhythmic under long day, constant light and constant dakness conditions" = "LDLLDD", 
                                                       "Rhythmic under short day, constant light and constant dakness conditions" = "SDLLDD",
@@ -1366,10 +1387,15 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                             )),
                #Choose your favourite gene
                conditionalPanel(condition = "input.navigation_bar == 'individual'",
-                                textInput(inputId= "gene",
-                                          label= "Choose your favourite gene",
-                                          value = "ostta07g03440",
-                                          placeholder = "ostta07g03440"))
+                                # textInput(inputId= "gene",
+                                #           label= "Select your favourite gene/protein",
+                                #           value = "ostta07g03440",
+                                #           placeholder = "ostta07g03440"),
+                                selectizeInput(inputId= "gene",
+                                               label= "Select your favourite gene/protein",
+                                               selected = "ostta10g00920 Nitrate Reductase, Molybdenum cofactor oxidoreductase, dimerisation",
+                                               choices = NULL, #ostta.annotation,
+                                               multiple = FALSE))
                ),
         column(width = 4,
                
@@ -1377,15 +1403,15 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                conditionalPanel(condition = "input.navigation_bar == 'individual' && ( input.omics == 'rna' || input.omics == 'prot')",
                                 selectInput(inputId = "season", label="Choose your favourite photoperiod", 
                                             
-                                            choices=c("Long days (Summer)" = "LD", 
-                                                      "Short days (Winter)" = "SD",
+                                            choices=c("Long Days (Summer, 16h light / 8h dark)" = "LD", 
+                                                      "Short Days (Winter, 8h light / 16h dark)" = "SD",
                                                       "Both" = "cicle_comparison")
                                 )),
                conditionalPanel(condition = "input.navigation_bar == 'individual' && input.omics == 'integration'",
                                 selectInput(inputId = "season_integration", label="Choose your favourite photoperiod", 
                                             
-                                            choices=c("Long days (Summer)" = "LD", 
-                                                      "Short days (Winter)" = "SD")
+                                            choices=c("Long Days (Summer, 16h light / 8h dark)" = "LD", 
+                                                      "Short Days (Winter, 8h light / 16h dark)" = "SD")
                                 )),
                
                conditionalPanel(condition = "input.navigation_bar == 'individual' && input.omics == 'rna' ",    
@@ -1393,8 +1419,8 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                 radioButtons(inputId = "continuo",
                                              label="Would you like to combine your favourite photoperiod with 
                                              continuous light or darkness conditions?",
-                                             choices=c("Continuous light" = "LL",
-                                                       "Continuous darkness" = "DD",
+                                             choices=c("Constant Light (LL)" = "LL",
+                                                       "Constant Darkness (DD)" = "DD",
                                                        "My favourite photoperiod is enough" = "3days"
                                              ))),
               #choose the analysis to execute
@@ -1569,8 +1595,9 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
               img(src='logo_csic.jpg', align = "center", width=100),
               tags$br(),tags$br(),tags$br(),
               
-              tags$div(align="justify", tags$b("Hey user!")),
-              tags$div(align="justify","Hope you are enjoying this app. Any question or suggestion can be addressed to arlosada@us.es", 
+              tags$div(align="justify", tags$b("Hey there!")),
+              tags$div(align="justify","Hope you are enjoying this app. Any question or suggestion? Please open up an issue in our
+                       github repos or email me at arlosada@us.es", 
                        tags$b("Thank you!")),
               tags$br(),tags$br(),tags$br(),
               tags$br(),tags$br(),tags$br(),
@@ -1586,6 +1613,12 @@ server <- shinyServer(function(input, output, session) {
         HTML("<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/ZCWrqOxrdJM\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>")
     })  
   
+    ## Server side for target.gene selectize
+    updateSelectizeInput(session,inputId =  "gene",
+                         selected = "ostta10g00920 Nitrate Reductase, Molybdenum cofactor oxidoreductase, dimerisation",
+                         choices = ostta.annotation, 
+                         server = TRUE)
+    
  
     ## Actions to perform after click the go button
     observeEvent(input$go.button , {
@@ -2087,7 +2120,7 @@ assocated to the enriched pathway represented in the corresponding row."
   if(input$omics == "rna" )
   {
     #extract gene expression levels of the target gene.
-  selected.gene <- as.character(input$gene)
+  selected.gene <- strsplit(x = as.character(input$gene),split = " ")[[1]][1]
   #selected.gene <-"ostta01g00060"
   total.gene.expression <- read.table(file = "gene_expression.tsv", header =T)
   gene.expression<- total.gene.expression[selected.gene,]
@@ -2096,7 +2129,7 @@ assocated to the enriched pathway represented in the corresponding row."
   {
     #Extract protein abundance levels of the corresponding target gene
     #target.prot <- "ostta05g02426"
-    target.prot <- as.character(input$gene)
+    target.prot <- strsplit(x = as.character(input$gene),split = " ")[[1]][1]
     #target.prot <-"ostta01g00060"
     swath.normalized.data.SD <- read.table(file = "sd_swath_processed_data.tsv",header=T,sep="\t")
     rownames(swath.normalized.data.SD)<- swath.normalized.data.SD$X
@@ -2118,7 +2151,7 @@ assocated to the enriched pathway represented in the corresponding row."
   {
     #Extract protein abundance levels of the corresponding target gene
     #target.prot <- "ostta07g03440"
-    target.prot <- as.character(input$gene)
+    target.prot <- strsplit(x = as.character(input$gene),split = " ")[[1]][1]
     #target.prot <-"ostta01g00060"
     swath.normalized.data.SD <- read.table(file = "sd_swath_processed_data.tsv",header=T,sep="\t")
     rownames(swath.normalized.data.SD)<- swath.normalized.data.SD$X
@@ -2137,7 +2170,7 @@ assocated to the enriched pathway represented in the corresponding row."
     protein.LD <- protein.LD[,zts.omics]
     
     #extract gene expression levels of the target gene.
-    selected.gene <- as.character(input$gene)
+    selected.gene <- strsplit(x = as.character(input$gene),split = " ")[[1]][1]
     #selected.gene <-"ostta07g03440"
     total.gene.expression <- read.table(file = "gene_expression.tsv", header =T)
     gene.expression<- total.gene.expression[selected.gene,]
@@ -2178,10 +2211,10 @@ assocated to the enriched pathway represented in the corresponding row."
         
         rain.results <- matrix(ncol=3, nrow=1)
         rownames(rain.results) <- c("SD")
-        colnames(rain.results) <- c("", "Period 24h", "Period 12h")
+        colnames(rain.results) <- c("", "One Peak Rhythmicity", "Two Peaks Rhythmicity")
         rain.results[,1] <-"Rhythmicity under short day (SD) conditions"
-        rain.results["SD","Period 24h"] <- rain24.sd$pVal
-        rain.results["SD","Period 12h"] <- rain12.sd$pVal
+        rain.results["SD","One Peak Rhythmicity"] <- rain24.sd$pVal
+        rain.results["SD","Two Peaks Rhythmicity"] <- rain12.sd$pVal
         
         output$output_statistical_table <- renderDataTable({
           rain.results 
@@ -2219,10 +2252,10 @@ assocated to the enriched pathway represented in the corresponding row."
         
         rain.results <- matrix(ncol=3, nrow=1)
         rownames(rain.results) <- c("LD")
-        colnames(rain.results) <- c("","Period 24h", "Period 12h")
+        colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
         rain.results[,1] <- "Rhythmicity under long day conditions"
-        rain.results["LD","Period 24h"] <- rain24.ld$pVal
-        rain.results["LD","Period 12h"] <- rain12.ld$pVal
+        rain.results["LD","One Peak Rhythmicity"] <- rain24.ld$pVal
+        rain.results["LD","Two Peaks Rhythmicity"] <- rain12.ld$pVal
         
         output$output_statistical_table <- renderDataTable({
           rain.results 
@@ -2314,10 +2347,10 @@ assocated to the enriched pathway represented in the corresponding row."
       
       rain.results <- matrix(ncol=3, nrow=1)
       rownames(rain.results) <- c("SD")
-      colnames(rain.results) <- c("", "Period 24h", "Period 12h")
+      colnames(rain.results) <- c("", "One Peak Rhythmicity", "Two Peaks Rhythmicity")
       rain.results[,1] <-"Rhythmicity under short day (SD) conditions"
-      rain.results["SD","Period 24h"] <- rain24.sd$pVal
-      rain.results["SD","Period 12h"] <- rain12.sd$pVal
+      rain.results["SD","One Peak Rhythmicity"] <- rain24.sd$pVal
+      rain.results["SD","Two Peaks Rhythmicity"] <- rain12.sd$pVal
       
       output$output_statistical_table <- renderDataTable({
         rain.results 
@@ -2380,13 +2413,13 @@ assocated to the enriched pathway represented in the corresponding row."
       
       rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("SD", "SD+LL")
-      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
       rain.results[,1] <- c("Rhythmicity under short day (SD) conditions", 
                             "Rhythmicity under constant light conditions (after SD)")
-      rain.results["SD","Period 24h"] <- rain24.sd$pVal
-      rain.results["SD","Period 12h"] <- rain12.sd$pVal
-      rain.results["SD+LL","Period 24h"] <- rain24.sd.ll$pVal
-      rain.results["SD+LL","Period 12h"] <- rain12.sd.ll$pVal
+      rain.results["SD","One Peak Rhythmicity"] <- rain24.sd$pVal
+      rain.results["SD","Two Peaks Rhythmicity"] <- rain12.sd$pVal
+      rain.results["SD+LL","One Peak Rhythmicity"] <- rain24.sd.ll$pVal
+      rain.results["SD+LL","Two Peaks Rhythmicity"] <- rain12.sd.ll$pVal
       
       output$output_statistical_table <- renderDataTable({
         rain.results #go.result.table
@@ -2457,13 +2490,13 @@ assocated to the enriched pathway represented in the corresponding row."
       
       rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("SD", "SD+DD")
-      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
       rain.results[,1] <- c("Rhythmicity under short day (SD) conditions", 
                             "Rhythmicity under constant darkness conditions (after SD)")
-      rain.results["SD","Period 24h"] <- rain24.sd$pVal
-      rain.results["SD","Period 12h"] <- rain12.sd$pVal
-      rain.results["SD+DD","Period 24h"] <- rain24.sd.dd$pVal
-      rain.results["SD+DD","Period 12h"] <- rain12.sd.dd$pVal
+      rain.results["SD","One Peak Rhythmicity"] <- rain24.sd$pVal
+      rain.results["SD","Two Peaks Rhythmicity"] <- rain12.sd$pVal
+      rain.results["SD+DD","One Peak Rhythmicity"] <- rain24.sd.dd$pVal
+      rain.results["SD+DD","Two Peaks Rhythmicity"] <- rain12.sd.dd$pVal
       
       output$output_statistical_table <- renderDataTable({
         rain.results #go.result.table
@@ -2505,10 +2538,10 @@ assocated to the enriched pathway represented in the corresponding row."
       
       rain.results <- matrix(ncol=3, nrow=1)
       rownames(rain.results) <- c("LD")
-      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
       rain.results[,1] <- "Rhythmicity under long day conditions"
-      rain.results["LD","Period 24h"] <- rain24.ld$pVal
-      rain.results["LD","Period 12h"] <- rain12.ld$pVal
+      rain.results["LD","One Peak Rhythmicity"] <- rain24.ld$pVal
+      rain.results["LD","Two Peaks Rhythmicity"] <- rain12.ld$pVal
       
       output$output_statistical_table <- renderDataTable({
         rain.results 
@@ -2571,13 +2604,13 @@ assocated to the enriched pathway represented in the corresponding row."
       
       rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("LD", "LD+LL")
-      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
       rain.results[,1] <- c("Rhythmicity under long day (LD) conditions", 
                             "Rhythmicity under constant light conditions (after LD)")
-      rain.results["LD","Period 24h"] <- rain24.ld$pVal
-      rain.results["LD","Period 12h"] <- rain12.ld$pVal
-      rain.results["LD+LL","Period 24h"] <- rain24.ld.ll$pVal
-      rain.results["LD+LL","Period 12h"] <- rain12.ld.ll$pVal
+      rain.results["LD","One Peak Rhythmicity"] <- rain24.ld$pVal
+      rain.results["LD","Two Peaks Rhythmicity"] <- rain12.ld$pVal
+      rain.results["LD+LL","One Peak Rhythmicity"] <- rain24.ld.ll$pVal
+      rain.results["LD+LL","Two Peaks Rhythmicity"] <- rain12.ld.ll$pVal
       
       output$output_statistical_table <- renderDataTable({
         rain.results 
@@ -2650,13 +2683,13 @@ assocated to the enriched pathway represented in the corresponding row."
       
       rain.results <- matrix(ncol=3, nrow=2)
       rownames(rain.results) <- c("LD", "LD+DD")
-      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
       rain.results[,1] <-c("Rhythmicity under long day (LD) conditions",
                            "Rhythmicity under constant darkness conditions (after LD)")
-      rain.results["LD","Period 24h"] <- rain24.ld$pVal
-      rain.results["LD","Period 12h"] <- rain12.ld$pVal
-      rain.results["LD+DD","Period 24h"] <- rain24.ld.dd$pVal
-      rain.results["LD+DD","Period 12h"] <- rain12.ld.dd$pVal
+      rain.results["LD","One Peak Rhythmicity"] <- rain24.ld$pVal
+      rain.results["LD","Two Peaks Rhythmicity"] <- rain12.ld$pVal
+      rain.results["LD+DD","One Peak Rhythmicity"] <- rain24.ld.dd$pVal
+      rain.results["LD+DD","Two Peaks Rhythmicity"] <- rain12.ld.dd$pVal
       
       output$output_statistical_table <- renderDataTable({
         rain.results 
@@ -2794,19 +2827,19 @@ assocated to the enriched pathway represented in the corresponding row."
       
       rain.results <- matrix(ncol=3, nrow=4)
       rownames(rain.results) <- c("SD", "SD+LL","LD", "LD+LL")
-      colnames(rain.results) <- c("","Period 24h", "Period 12h")
+      colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
       rain.results[,1] <- c("Rhythmicity under short day (SD) conditions", 
                             "Rhythmicity under constant light conditions (after SD)",
                             "Rhythmicity under long day (LD) conditions", 
                             "Rhythmicity under constant light conditions (after LD)")
-      rain.results["SD","Period 24h"] <- rain24.sd$pVal
-      rain.results["SD","Period 12h"] <- rain12.sd$pVal
-      rain.results["LD","Period 24h"] <- rain24.ld$pVal
-      rain.results["LD","Period 12h"] <- rain12.ld$pVal
-      rain.results["SD+LL","Period 24h"] <- rain24.sd.ll$pVal
-      rain.results["SD+LL","Period 12h"] <- rain12.sd.ll$pVal
-      rain.results["LD+LL","Period 24h"] <- rain24.ld.ll$pVal
-      rain.results["LD+LL","Period 12h"] <- rain12.ld.ll$pVal
+      rain.results["SD","One Peak Rhythmicity"] <- rain24.sd$pVal
+      rain.results["SD","Two Peaks Rhythmicity"] <- rain12.sd$pVal
+      rain.results["LD","One Peak Rhythmicity"] <- rain24.ld$pVal
+      rain.results["LD","Two Peaks Rhythmicity"] <- rain12.ld$pVal
+      rain.results["SD+LL","One Peak Rhythmicity"] <- rain24.sd.ll$pVal
+      rain.results["SD+LL","Two Peaks Rhythmicity"] <- rain12.sd.ll$pVal
+      rain.results["LD+LL","One Peak Rhythmicity"] <- rain24.ld.ll$pVal
+      rain.results["LD+LL","Two Peaks Rhythmicity"] <- rain12.ld.ll$pVal
       
       
       output$output_statistical_table <- renderDataTable({
@@ -2916,19 +2949,19 @@ assocated to the enriched pathway represented in the corresponding row."
     
     rain.results <- matrix(ncol=3, nrow=4)
     rownames(rain.results) <- c("SD", "SD+DD","LD", "LD+DD")
-    colnames(rain.results) <- c("","Period 24h", "Period 12h")
+    colnames(rain.results) <- c("","One Peak Rhythmicity", "Two Peaks Rhythmicity")
     rain.results[,1] <-c("Rhythmicity under short day (SD) conditions", 
                          "Rhythmicity under constant darkness conditions (after SD)",
                          "Rhythmicity under long day (LD) conditions",
                          "Rhythmicity under constant darkness conditions (after LD)")
-    rain.results["LD","Period 24h"] <- rain24.ld$pVal
-    rain.results["LD","Period 12h"] <- rain12.ld$pVal
-    rain.results["LD+DD","Period 24h"] <- rain24.ld.dd$pVal
-    rain.results["LD+DD","Period 12h"] <- rain12.ld.dd$pVal
-    rain.results["SD","Period 24h"] <- rain24.sd$pVal
-    rain.results["SD","Period 12h"] <- rain12.sd$pVal
-    rain.results["SD+DD","Period 24h"] <- rain24.sd.dd$pVal
-    rain.results["SD+DD","Period 12h"] <- rain12.sd.dd$pVal
+    rain.results["LD","One Peak Rhythmicity"] <- rain24.ld$pVal
+    rain.results["LD","Two Peaks Rhythmicity"] <- rain12.ld$pVal
+    rain.results["LD+DD","One Peak Rhythmicity"] <- rain24.ld.dd$pVal
+    rain.results["LD+DD","Two Peaks Rhythmicity"] <- rain12.ld.dd$pVal
+    rain.results["SD","One Peak Rhythmicity"] <- rain24.sd$pVal
+    rain.results["SD","Two Peaks Rhythmicity"] <- rain12.sd$pVal
+    rain.results["SD+DD","One Peak Rhythmicity"] <- rain24.sd.dd$pVal
+    rain.results["SD+DD","Two Peaks Rhythmicity"] <- rain12.sd.dd$pVal
     
     output$output_statistical_table <- renderDataTable({
       rain.results 
