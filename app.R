@@ -1231,15 +1231,16 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
             ),
             
             conditionalPanel(condition = "input.navigation_bar == 'clusters'",
-                             tags$div(align="justify", tags$b("MINOTAUR"), "allows researchers to perform", tags$b("functional annotation"), 
+                             tags$div(align="justify", tags$b("MINOTAUR"), "allows researchers to perform", tags$b("functional enrichment analysis"), 
                                       "over gene sets.", tags$b("Gene Ontology (GO) enrichment"), "analysis as well as", tags$b("KEGG (Kyoto Encyclopedia
-                       of Genes and Genomes) pathway enrichment"), "analysis are supported. MINOTAURO offers several gene sets generated in our lab, 
-                                      such as rythmic genes sets or sets of genes that peak at a certain time of the day.", " See our", tags$b("video tutorial"),
+                       of Genes and Genomes) pathway enrichment"), "analysis are supported. MINOTAUR gives access to some of the gene sets 
+                       identified in our project, such as rythmic genes sets under specific condtions or sets of genes peaking at a certain time point during the day.", 
+                                      " See our", tags$b("video tutorial"),
                                       "for details or follow the next steps to perform your analysis:",
                                       tags$ol(
-                                          tags$li("In the right panel choose the type of enrichment analysis to perform and the", tags$b("p-value threshold.")),
-                                          tags$li("In the right panel, choose your", tags$b("gene set"), "of interest."),
-                                          tags$li("Click on the ", tags$b("Have Fun"), " button to perform the specified functional enrichment analysis. The
+                                        tags$li("In the left panel below, choose your", tags$b("gene set"), "of interest."),
+                                        tags$li("In the right panel below, choose the type of enrichment analysis to perform and your", tags$b("p-value threshold.")),
+                                        tags$li("Click on the ", tags$b("Have Fun"), " button to perform the specified functional enrichment analysis. The
                                           results will be shown in the different tabs below.")
                                       )
                              )),
@@ -1330,7 +1331,7 @@ ui <- shinyUI(fluidPage(#theme= "bootstrap.css",
                                 radioButtons(inputId = "gene_sets",
                                              label="Gene sets availables:",
                                              choices=c("Rhythmic genes sets" = "ritmo",
-                                                       "Sets of genes that peak at a certain time of the day" = "peak"
+                                                       "Sets of genes peaking at a certain time point of the day" = "peak"
                                                        
                                              ))),
                   #Choose your favourite photoperiod
@@ -1755,17 +1756,18 @@ server <- shinyServer(function(input, output, session) {
             enrich.go <- enrichGO(gene          = target.genes,
                                   universe      = microalgae.genes,
                                   OrgDb         = org.db,
-                                  ont           = "MF",
-                                    #input$ontology,
+                                  ont           = input$ontology,
                                   pAdjustMethod = "BH",
-                                  pvalueCutoff  = 0.05,
-                                    #input$pvalue,
+                                  pvalueCutoff  = input$pvalue,
+                                  qvalueCutoff = 1,
                                   readable      = TRUE,
                                   keyType = "GID")
+            enrich.go@result$p.adjust <- enrich.go@result$pvalue 
             
             
             ## Generate ouput table
             enrich.go.result <- as.data.frame(enrich.go@result)
+            enrich.go.result <- subset(enrich.go.result, pvalue < input$pvalue)
             
             if(nrow(enrich.go.result) > 0)
             {
@@ -1860,7 +1862,7 @@ annotated with the GO term represented in the corresponding row."
                 output$bar.plot <- renderPlot(
                     width     = 870,
                     height    = 600,
-                    res       = 120,
+                    res       = 90,
                     expr = {
                         barplot(enrich.go,drop=TRUE)#,showCategory = 10)
                     })
@@ -1874,7 +1876,7 @@ corresponding GO term and the total number of annotated genes in the target set.
                 output$dot.plot <- renderPlot(
                     width     = 870,
                     height    = 600,
-                    res       = 120,
+                    res       = 90,
                     expr = {
                         dotplot(enrich.go)
                     })
@@ -1889,7 +1891,7 @@ with the corresponding GO term. Right click on the image to download it.")
                 output$cnet.plot <- renderPlot(
                     width     = 870,
                     height    = 600,
-                    res       = 120,
+                    res       = 90,
                     expr = {
                         cnetplot(enrich.go)
                     })
