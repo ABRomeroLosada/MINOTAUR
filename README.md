@@ -1,1 +1,4 @@
-#osttaCIRC
+## **Welcome to MINOTAUR (Multiomics INtegration in Ostreococcus TAURi!!**
+
+Although doing research in **microalgae** is amazing, we have noticed a lack of easy-to-use tools to analyse and explore omic data. This is restricting progress in the microalgae research community. Following Open Science philosophy, we have developed different online tools to analyse omic data in microalgae such as **AlgaeFUN with MARACAS** (https://greennetwork.us.es/AlgaeFUN/), and to explore the omic data generated in our lab such as the current tool **MINOTAUR**.
+Computational analysis for omic data can have a steep learning curve. Therefore making only raw data available is not enough to ensure accesibility to our results by other independent researchers. To fill this need we have developed **MINOTAUR (Multiomics Integration in Ostreococcus tauri** an online app for the exploration of the results of our RNA-seq transcriptomic and SWATH proteomic data generated under diurnal and seasonal cycles including constant light and constant dark as free running conditions. You can also see our **video tutorial**. Please cite our work if you find it useful in your research.
