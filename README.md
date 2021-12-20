@@ -1,3 +1,5 @@
+<a href="https://doi.org/10.5281/zenodo.5793982"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5793982.svg" alt="DOI"></a>
+
 ## **Welcome to MINOTAUR (Multiomics INtegration in Ostreococcus TAURi!!**
 
 Although doing research in **microalgae** is amazing, we have noticed a lack of easy-to-use tools to analyse and explore omic data. This is restricting progress in the microalgae research community. Following Open Science philosophy, we have developed different online tools to analyse omic data in microalgae such as **AlgaeFUN with MARACAS** (https://greennetwork.us.es/AlgaeFUN/), and to explore the omic data generated in our lab such as the current tool **MINOTAUR**.
